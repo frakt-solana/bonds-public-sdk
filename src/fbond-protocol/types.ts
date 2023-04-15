@@ -267,6 +267,7 @@ export interface AutocompoundDeposit {
   fbondTokenMint: string;
   collateralTokenMint: string;
   solAmount: number;
+  redeemedAt: number;
   publicKey: string;
 }
 

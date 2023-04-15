@@ -58,10 +58,12 @@ export const liquidateReceivingNftFbondPnft: LiquidateReceivingNftFbondPnft = as
     accounts.bondCollateralOrSolReceiver,
     accounts.collateralTokenMint,
   );
+  const userMiddleTokenAccount = await findAssociatedTokenAddress(accounts.userPubkey, accounts.collateralTokenMint);
   // const collateralTokenAccount = await findAssociatedTokenAddress(bondProgramAuthority, accounts.collateralTokenMint);
   const editionInfo = getMetaplexEditionPda(accounts.collateralTokenMint);
   const nftMetadata = getMetaplexMetadata(accounts.collateralTokenMint);
   const ownerTokenRecord = findTokenRecordPda(accounts.collateralTokenMint, accounts.collateralTokenAccount);
+  const middleTokenRecord = findTokenRecordPda(accounts.collateralTokenMint, userMiddleTokenAccount);
   const destTokenRecord = findTokenRecordPda(accounts.collateralTokenMint, bondCollateralOrSolReceiverTokenAccount);
   const meta = await Metadata.fromAccountAddress(connection, nftMetadata);
   const ruleSet = meta.programmableConfig?.ruleSet;
@@ -70,38 +72,38 @@ export const liquidateReceivingNftFbondPnft: LiquidateReceivingNftFbondPnft = as
   });
   if (!!addComputeUnits) instructions.push(modifyComputeUnits);
   // console.log('inside collateral token account: ', collateralTokenAccount.toBase58());
-  console.log(
-    'liquidating args: ',
-    anchorRawBNsAndPubkeysToNumsAndStrings({
-      account: {
-        fbond: accounts.fbond,
-        bondProgramAuthority: bondProgramAuthority,
-        returnFundsOwner: returnFundsOwner,
+  // console.log(
+  //   'liquidating args: ',
+  //   anchorRawBNsAndPubkeysToNumsAndStrings({
+  //     account: {
+  //       fbond: accounts.fbond,
+  //       bondProgramAuthority: bondProgramAuthority,
+  //       returnFundsOwner: returnFundsOwner,
 
-        user: accounts.userPubkey,
+  //       user: accounts.userPubkey,
 
-        collateralBox: accounts.collateralBox,
-        tokenMint: accounts.collateralTokenMint,
-        bondCollateralOrSolReceiverTokenAccount: bondCollateralOrSolReceiverTokenAccount,
-        collateralTokenAccount: accounts.collateralTokenAccount,
-        collateralOwner: accounts.collateralOwner,
-        bondCollateralOrSolReceiver: accounts.bondCollateralOrSolReceiver,
-        ownerTokenRecord: ownerTokenRecord,
-        destTokenRecord,
-        nftMetadata,
-        instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
-        authorizationRulesProgram: AUTHORIZATION_RULES_PROGRAM,
+  //       collateralBox: accounts.collateralBox,
+  //       tokenMint: accounts.collateralTokenMint,
+  //       bondCollateralOrSolReceiverTokenAccount: bondCollateralOrSolReceiverTokenAccount,
+  //       collateralTokenAccount: accounts.collateralTokenAccount,
+  //       collateralOwner: accounts.collateralOwner,
+  //       bondCollateralOrSolReceiver: accounts.bondCollateralOrSolReceiver,
+  //       ownerTokenRecord: ownerTokenRecord,
+  //       destTokenRecord,
+  //       nftMetadata,
+  //       instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
+  //       authorizationRulesProgram: AUTHORIZATION_RULES_PROGRAM,
 
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-        systemProgram: web3.SystemProgram.programId,
-        rent: web3.SYSVAR_RENT_PUBKEY,
-        metadataProgram: METADATA_PROGRAM_PUBKEY,
-        editionInfo: editionInfo,
-      },
-      publicKey: ruleSet || METADATA_PROGRAM_PUBKEY,
-    }),
-  );
+  //       tokenProgram: TOKEN_PROGRAM_ID,
+  //       associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+  //       systemProgram: web3.SystemProgram.programId,
+  //       rent: web3.SYSVAR_RENT_PUBKEY,
+  //       metadataProgram: METADATA_PROGRAM_PUBKEY,
+  //       editionInfo: editionInfo,
+  //     },
+  //     publicKey: ruleSet || METADATA_PROGRAM_PUBKEY,
+  //   }),
+  // );
   instructions.push(
     await program.methods
       .liquidateReceivingNftFbondPnft(null)
@@ -118,7 +120,9 @@ export const liquidateReceivingNftFbondPnft: LiquidateReceivingNftFbondPnft = as
         collateralTokenAccount: accounts.collateralTokenAccount,
         collateralOwner: accounts.collateralOwner,
         bondCollateralOrSolReceiver: accounts.bondCollateralOrSolReceiver,
-        ownerTokenRecord: ownerTokenRecord,
+        ownerTokenRecord,
+        middleTokenRecord,
+        userMiddleTokenAccount,
         destTokenRecord,
         nftMetadata,
         instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,

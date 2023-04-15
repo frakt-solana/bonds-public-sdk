@@ -63,7 +63,7 @@ const BONDS_VALIDATION_ADAPTER_MAINNET = new anchor.web3.PublicKey('41eQiufrrjD5
 // @ts-ignore
 test('Examples', async () => {
   // void (await initializeHadoMarketScript());
-  void (await getAllProgramAccountsScript());
+  // void (await getAllProgramAccountsScript());
   // void (await exampleDepositReturnedSolToLiquidatingBond());
   // void (await exampleUpdateActualReturnAmount());
   // void (await exampleLiquidateFbond());
@@ -99,7 +99,182 @@ test('Examples', async () => {
   // await getAllUserTokensModified();
   // await exampleGetBondActivities();
   // getBestOrdersForExitTest();
+  await takeLoanScript();
 });
+
+const takeLoanScript = async () => {
+  const durationFilter = 1209600;
+  const pairs14Days: Pair[] = (getLoansSampleNew() as any).filter(
+    (pair) => pair.validation.durationFilter >= durationFilter,
+  );
+
+  // You can get loan in range of sol, 0 -> 10 SOL.
+  const collectionFloor = 12.04 * 1e9;
+  const maxBorrowValue = getMaxBorrowValueOptimized({
+    pairs: pairs14Days,
+    collectionFloor,
+  });
+
+  console.log('maxBorrowValue: ', maxBorrowValue);
+  const bestOrders = getBestOrdersByBorrowValue({ pairs: pairs14Days, collectionFloor, borrowValue: 1e9 });
+  console.log('bestOrders: ', bestOrders);
+
+  const amountToReturn =
+    Math.trunc(bestOrders.takenOrders.reduce((sum, order) => sum + order.orderSize, 0)) * BOND_DECIMAL_DELTA;
+};
+
+const getLoansSampleNew = () => [
+  {
+    publicKey: 'CcxMQuZ6fqxAmRuUv1qew1BaHVT7vqHXrdC2yANhmL2R',
+    assetReceiver: '41RM36JUkmyYTYwX75eDekHTSh7pJeCshbFRau5YUbqZ',
+    baseSpotPrice: 9600,
+    bidCap: 729166,
+    bidSettlement: -143617,
+    bondingCurve: {
+      delta: 0,
+      bondingType: 'linear',
+    },
+    buyOrdersQuantity: 1,
+    concentrationIndex: 0,
+    createdAt: '2023-03-06T17:15:30.903Z',
+    currentSpotPrice: 9600,
+    edgeSettlement: 585549,
+    fee: 0,
+    feeTokenAccount: '11111111111111111111111111111111',
+    feeVaultSeed: 254,
+    fundsSolOrTokenBalance: 5621270400,
+    fundsSolVaultSeed: 255,
+    fundsTokenAccount: '11111111111111111111111111111111',
+    hadoMarket: 'AUnj4vmhekw3T7gzKmQgwga48wqQzRogRLDvtdgwWoSq',
+    initialFundsSolOrTokenBalance: 6999993600,
+    isRemoved: false,
+    lastTransactedAt: 1678122915,
+    lpTokensInCirculation: 0,
+    lpTokensMint: '11111111111111111111111111111111',
+    mathCounter: 0,
+    nftsSeed: 253,
+    pairAuthorityAdapterProgram: '4tdmkuY6EStxbS6Y8s5ueznL3VPMSugrvQuDeAHGZhSt',
+    pairAuthorityType: 'classicAuthority',
+    pairState: 'onMarketVirtual',
+    pairType: 'tokenForNft',
+    sellOrdersCount: 0,
+    solOrTokenFeeAmount: 0,
+    updatedAt: '2023-03-15T11:03:16.654Z',
+    validation: {
+      publicKey: '72EchKujgta4YPBH79LWXjNkUt7ZokdXY2o4oFTWanvj',
+      bondFeatures: 'none',
+      createdAt: '2023-03-06T17:15:30.889Z',
+      durationFilter: 1209600,
+      isRemoved: false,
+      loanToValueFilter: 1000,
+      maxReturnAmountFilter: 1000000000000,
+      pair: 'CcxMQuZ6fqxAmRuUv1qew1BaHVT7vqHXrdC2yANhmL2R',
+      updatedAt: '2023-03-06T17:15:30.889Z',
+      user: '41RM36JUkmyYTYwX75eDekHTSh7pJeCshbFRau5YUbqZ',
+    },
+    authorityAdapterPublicKey: '4XT4BATUoNXABPTNuygWKxwQbNuhMgVJfTX6pPYHpGCN',
+  },
+  {
+    publicKey: 'AEaFKv6GnBhs8cCHW3J9xLgE62mmLyMJ6o5buKf2fSr6',
+    assetReceiver: 'AyrwPXnT9Q3Wn7Jev99WTkYrD5BFNwySzPFxqVZKfYXo',
+    baseSpotPrice: 9750,
+    bidCap: 1128205,
+    bidSettlement: -1029132,
+    bondingCurve: {
+      delta: 0,
+      bondingType: 'linear',
+    },
+    buyOrdersQuantity: 1,
+    concentrationIndex: 0,
+    createdAt: '2023-03-20T19:30:17.775Z',
+    currentSpotPrice: 9750,
+    edgeSettlement: 99073,
+    fee: 0,
+    feeTokenAccount: '11111111111111111111111111111111',
+    feeVaultSeed: 255,
+    fundsSolOrTokenBalance: 965961750,
+    fundsSolVaultSeed: 255,
+    fundsTokenAccount: '11111111111111111111111111111111',
+    hadoMarket: 'AUnj4vmhekw3T7gzKmQgwga48wqQzRogRLDvtdgwWoSq',
+    initialFundsSolOrTokenBalance: 64130879800,
+    isRemoved: false,
+    lastTransactedAt: 1679340598,
+    lpTokensInCirculation: 0,
+    lpTokensMint: '11111111111111111111111111111111',
+    mathCounter: 0,
+    nftsSeed: 255,
+    pairAuthorityAdapterProgram: '4tdmkuY6EStxbS6Y8s5ueznL3VPMSugrvQuDeAHGZhSt',
+    pairAuthorityType: 'classicAuthority',
+    pairState: 'onMarketVirtual',
+    pairType: 'tokenForNft',
+    sellOrdersCount: 0,
+    solOrTokenFeeAmount: 0,
+    updatedAt: '2023-04-05T17:01:48.449Z',
+    validation: {
+      publicKey: '6kNJYCzWuAq8ADCRziwxRLcXEu4ifK8xQWr9CeG7rz2U',
+      bondFeatures: 'receiveNftOnLiquidation',
+      createdAt: '2023-03-20T19:30:17.753Z',
+      durationFilter: 1209600,
+      isRemoved: false,
+      loanToValueFilter: 7400,
+      maxReturnAmountFilter: 24087000000,
+      pair: 'AEaFKv6GnBhs8cCHW3J9xLgE62mmLyMJ6o5buKf2fSr6',
+      updatedAt: '2023-03-25T06:07:01.963Z',
+      user: 'AyrwPXnT9Q3Wn7Jev99WTkYrD5BFNwySzPFxqVZKfYXo',
+    },
+    authorityAdapterPublicKey: '6DP13m4prft77aRRnFMGMtyf7QKGBoyddDYQA9zEWuFW',
+  },
+  {
+    publicKey: '5B28WfGhBkLrrtRP65zvXfaKoQ9Lignrq2HRS1cJSUoR',
+    assetReceiver: '6JgexLq1STiDE3MvjvnsZqdevnoHMTeaM7FrJRNt2Mrg',
+    baseSpotPrice: 9300,
+    bidCap: 1075260,
+    bidSettlement: -967734,
+    bondingCurve: {
+      delta: 0,
+      bondingType: 'linear',
+    },
+    buyOrdersQuantity: 1,
+    concentrationIndex: 0,
+    createdAt: '2023-03-30T05:50:31.286Z',
+    currentSpotPrice: 9300,
+    edgeSettlement: 107526,
+    fee: 0,
+    feeTokenAccount: '11111111111111111111111111111111',
+    feeVaultSeed: 255,
+    fundsSolOrTokenBalance: 999991800,
+    fundsSolVaultSeed: 254,
+    fundsTokenAccount: '11111111111111111111111111111111',
+    hadoMarket: 'AUnj4vmhekw3T7gzKmQgwga48wqQzRogRLDvtdgwWoSq',
+    initialFundsSolOrTokenBalance: 999991800,
+    isRemoved: false,
+    lastTransactedAt: 1680155408,
+    lpTokensInCirculation: 0,
+    lpTokensMint: '11111111111111111111111111111111',
+    mathCounter: 0,
+    nftsSeed: 255,
+    pairAuthorityAdapterProgram: '4tdmkuY6EStxbS6Y8s5ueznL3VPMSugrvQuDeAHGZhSt',
+    pairAuthorityType: 'classicAuthority',
+    pairState: 'onMarketVirtual',
+    pairType: 'tokenForNft',
+    sellOrdersCount: 0,
+    solOrTokenFeeAmount: 0,
+    updatedAt: '2023-03-30T05:50:31.286Z',
+    validation: {
+      publicKey: 'F3bCsBcBXvfbQSBtq25UA1zFGqMseaXUm5TvB9m1X8c2',
+      bondFeatures: 'autoCompoundAndReceiveNft',
+      createdAt: '2023-03-30T05:50:31.228Z',
+      durationFilter: 604800,
+      isRemoved: false,
+      loanToValueFilter: 3800,
+      maxReturnAmountFilter: 14381010960,
+      pair: '5B28WfGhBkLrrtRP65zvXfaKoQ9Lignrq2HRS1cJSUoR',
+      updatedAt: '2023-03-30T05:50:31.228Z',
+      user: '6JgexLq1STiDE3MvjvnsZqdevnoHMTeaM7FrJRNt2Mrg',
+    },
+    authorityAdapterPublicKey: '3YrMVvZjCqHNX4i5euXejCUsGZRfDkVegY6GTycjqYdg',
+  },
+];
 
 const getBestOrdersForExitTest = () => {
   const bestOrdersForExit = getBestOrdersForExit({

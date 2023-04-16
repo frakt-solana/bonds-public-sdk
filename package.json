@@ -1,6 +1,7 @@
 {
   "name": "fbonds-core-public",
   "version": "0.1.0",
+  "license": "MIT",
   "description": "Fbonds SDK for interacting with protocol",
   "keywords": [
     "Frakt",

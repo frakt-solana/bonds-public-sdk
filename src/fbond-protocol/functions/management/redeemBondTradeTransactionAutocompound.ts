@@ -1,12 +1,12 @@
 import { BN, web3 } from '@project-serum/anchor';
 import { ASSOCIATED_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token';
 import { findAssociatedTokenAddress } from '../../../common';
-import { ENCODER } from '../../constants';
-import { BOND_PROOGRAM_AUTHORITY_PREFIX, RETURN_FUNDS_OWNER_PREFIX } from '../../constants';
+import { ENCODER, MUTUAL_BOND_TRADE_TXN_VAULT } from '../../constants';
+import { SOL_FUNDS_PREFIX, RETURN_FUNDS_OWNER_PREFIX, AUTOCOMPOUND_DEPOSIT_PREFIX } from '../../constants';
 
 import { returnAnchorProgram } from '../../helpers';
 
-type SetBondCollateralOrSolReceiver = (params: {
+type RedeemBondTradeTransactionAutocompound = (params: {
   programId: web3.PublicKey;
   connection: web3.Connection;
 
@@ -14,6 +14,9 @@ type SetBondCollateralOrSolReceiver = (params: {
     userPubkey: web3.PublicKey;
     fbond: web3.PublicKey;
     fbondsTokenMint: web3.PublicKey;
+    assetReciever: web3.PublicKey;
+    bondTradeTransaction: web3.PublicKey;
+    bondOfferV2: web3.PublicKey;
   };
 
   sendTxn: (transaction: web3.Transaction, signers: web3.Signer[]) => Promise<void>;
@@ -22,7 +25,7 @@ type SetBondCollateralOrSolReceiver = (params: {
   signers: web3.Signer[];
 }>;
 
-export const setBondCollateralOrSolReceiver: SetBondCollateralOrSolReceiver = async ({
+export const redeemBondTradeTransactionAutocompound: RedeemBondTradeTransactionAutocompound = async ({
   programId,
   connection,
   accounts,
@@ -31,27 +34,32 @@ export const setBondCollateralOrSolReceiver: SetBondCollateralOrSolReceiver = as
   const program = returnAnchorProgram(programId, connection);
   const instructions: web3.TransactionInstruction[] = [];
 
-  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
-    [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), accounts.fbond.toBuffer()],
-    program.programId,
-  );
   const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );
+  const [mutualBondTradeTxnVault] = await web3.PublicKey.findProgramAddress(
+    [ENCODER.encode(MUTUAL_BOND_TRADE_TXN_VAULT)],
+    program.programId,
+  );
 
-  const userFbondTokenAccount = await findAssociatedTokenAddress(accounts.userPubkey, accounts.fbondsTokenMint);
+  const bondTradeTxnTokenAccount = await findAssociatedTokenAddress(mutualBondTradeTxnVault, accounts.fbondsTokenMint);
 
   instructions.push(
     await program.methods
-      .setBondCollateralOrSolReceiver()
-      .accounts({
+      .redeemBondTradeTransactionAutocompound()
+      .accountsStrict({
         fbond: accounts.fbond,
+        returnFundsOwner: returnFundsOwner,
 
         fbondTokenMint: accounts.fbondsTokenMint,
-        userFbondTokenAccount: userFbondTokenAccount,
+
+        bondOfferV2: accounts.bondOfferV2,
+        bondTradeTransactionV2: accounts.bondTradeTransaction,
+        bondTradeTxnTokenAccount: bondTradeTxnTokenAccount,
+        mutualBondTradeTxnVault: mutualBondTradeTxnVault,
         user: accounts.userPubkey,
-        bondCollateralOrSolReceiver: accounts.userPubkey,
+        assetReceiver: accounts.assetReciever,
 
         tokenProgram: TOKEN_PROGRAM_ID,
         associatedTokenProgram: ASSOCIATED_PROGRAM_ID,

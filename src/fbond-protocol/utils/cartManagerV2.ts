@@ -1,8 +1,8 @@
 import { max, minBy, maxBy, sumBy, take } from 'lodash';
 import { calculateNextSpotPrice } from '../helpers';
-import { NftSwapPair, OrderType } from '../types';
+import { BondOfferV2, OrderType } from '../types';
 
-// import { Market, Pair } from '@frakt/api/bonds';
+// import { Market, BondOfferV2 } from '@frakt/api/bonds';
 // import { BorrowNft } from '@frakt/api/nft';
 // import { LoanType } from '@frakt/api/loans';
 
@@ -10,13 +10,6 @@ import { NftSwapPair, OrderType } from '../types';
 
 export interface Market {
   hadoMarket: string;
-}
-
-export interface Pair extends NftSwapPair {
-  validation: {
-    loanToValueFilter: number;
-    durationFilter: number;
-  };
 }
 
 export interface BondParams {
@@ -43,21 +36,21 @@ export interface LoanBond {
 }
 
 export type AddOrder = (params: {
-  state: { pairs: NftSwapPair[]; orders: Order[] };
+  state: { bondOffers: BondOfferV2[]; orders: Order[] };
   orderSize: number;
   pairPubkey: string;
   nftMint: string;
 }) => {
-  pairs: NftSwapPair[];
+  bondOffers: BondOfferV2[];
   orders: Order[];
 };
 
 export const addOrder: AddOrder = ({ state, orderSize, pairPubkey, nftMint }) => {
-  const pair = findPairByPubkey({ pairs: state.pairs, pairPubkey });
-  const patchedPair: NftSwapPair = patchPairToNextOrderAfterSell(pair);
+  const bondOffer = findPairByPubkey({ bondOffers: state.bondOffers, pairPubkey });
+  const patchedPair: BondOfferV2 = patchPairToNextOrderAfterSell(bondOffer);
   if (getCurrentOrderSize(patchedPair) < orderSize)
-    throw Error("Order size should be less or equal to pair's current order size");
-  if (patchedPair.buyOrdersQuantity === 0) throw Error('No buy orders on pair');
+    throw Error("Order size should be less or equal to bondOffer's current order size");
+  if (patchedPair.buyOrdersQuantity === 0) throw Error('No buy orders on bondOffer');
 
   const order: Order = {
     orderSize, //? lamports
@@ -70,24 +63,24 @@ export const addOrder: AddOrder = ({ state, orderSize, pairPubkey, nftMint }) =>
   };
   const newOrders = [...state.orders, order];
 
-  const nextPairState: NftSwapPair = patchPairToNextOrderAfterSell({
+  const nextPairState: BondOfferV2 = patchPairToNextOrderAfterSell({
     ...patchedPair,
     edgeSettlement:
       patchedPair.buyOrdersQuantity === 1 ? patchedPair.edgeSettlement - orderSize : patchedPair.edgeSettlement,
     bidSettlement: patchedPair.bidSettlement - orderSize,
   });
 
-  const updatedPairs = updatePairInPairs({ pairs: state.pairs, pair: nextPairState });
-  return { orders: newOrders, pairs: updatedPairs };
+  const updatedPairs = updatePairInPairs({ bondOffers: state.bondOffers, bondOffer: nextPairState });
+  return { orders: newOrders, bondOffers: updatedPairs };
 };
 
-export type RemoveOrder = (params: { state: { pairs: NftSwapPair[]; orders: Order[] }; order: Order }) => {
-  pairs: NftSwapPair[];
+export type RemoveOrder = (params: { state: { bondOffers: BondOfferV2[]; orders: Order[] }; order: Order }) => {
+  bondOffers: BondOfferV2[];
   orders: Order[];
 };
 
 export const removeOrder: RemoveOrder = ({ state, order }) => {
-  const pair = findPairByPubkey({ pairs: state.pairs, pairPubkey: order.pairPubkey });
+  const bondOffer = findPairByPubkey({ bondOffers: state.bondOffers, pairPubkey: order.pairPubkey });
   const orderToRemove = state.orders.find(
     (sourceOrder) =>
       sourceOrder.pairPubkey === sourceOrder.pairPubkey &&
@@ -97,7 +90,7 @@ export const removeOrder: RemoveOrder = ({ state, order }) => {
   );
 
   if (!orderToRemove) throw Error('Order not found');
-  const patchedPair: NftSwapPair = patchPairToNextOrderAfterSell(pair);
+  const patchedPair: BondOfferV2 = patchPairToNextOrderAfterSell(bondOffer);
 
   const newOrders = removeOrderInOrders({
     orders: state.orders,
@@ -107,7 +100,7 @@ export const removeOrder: RemoveOrder = ({ state, order }) => {
   const orderSizeLeft = patchedPair.bidCap - getCurrentOrderSize(patchedPair);
 
   if (orderToRemove.orderSize < orderSizeLeft) {
-    const nextPairState: NftSwapPair = {
+    const nextPairState: BondOfferV2 = {
       ...patchedPair,
       edgeSettlement:
         patchedPair.buyOrdersQuantity === 1 || patchedPair.buyOrdersQuantity === 0
@@ -115,87 +108,87 @@ export const removeOrder: RemoveOrder = ({ state, order }) => {
           : patchedPair.edgeSettlement,
       bidSettlement: patchedPair.bidSettlement + orderToRemove.orderSize,
     };
-    const updatedPairs = updatePairInPairs({ pairs: state.pairs, pair: nextPairState });
-    return { orders: newOrders, pairs: updatedPairs };
+    const updatedPairs = updatePairInPairs({ bondOffers: state.bondOffers, bondOffer: nextPairState });
+    return { orders: newOrders, bondOffers: updatedPairs };
   } else {
-    const nextPairState: NftSwapPair = patchPairToNextOrderAfterSell({
+    const nextPairState: BondOfferV2 = patchPairToNextOrderAfterSell({
       ...patchedPair,
       edgeSettlement:
         patchedPair.buyOrdersQuantity === 1 || patchedPair.buyOrdersQuantity === 0
           ? Math.min(patchedPair.bidCap, patchedPair.edgeSettlement + orderToRemove.orderSize)
           : patchedPair.edgeSettlement,
-      bidSettlement: (pair.bidCap - (patchedPair.bidSettlement + orderToRemove.orderSize)) * -1,
-      buyOrdersQuantity: pair.buyOrdersQuantity + 1,
-      mathCounter: pair.mathCounter + 1,
+      bidSettlement: (bondOffer.bidCap - (patchedPair.bidSettlement + orderToRemove.orderSize)) * -1,
+      buyOrdersQuantity: bondOffer.buyOrdersQuantity + 1,
+      mathCounter: bondOffer.mathCounter + 1,
       currentSpotPrice: calculateNextSpotPrice({
         orderType: OrderType.Buy,
-        spotPrice: pair.baseSpotPrice,
-        delta: pair.bondingCurve.delta,
-        bondingCurveType: pair.bondingCurve.bondingType,
-        counter: pair.mathCounter,
+        spotPrice: bondOffer.baseSpotPrice,
+        delta: bondOffer.bondingCurve.delta,
+        bondingCurveType: bondOffer.bondingCurve.bondingType,
+        counter: bondOffer.mathCounter,
       }),
     });
 
-    const updatedPairs = updatePairInPairs({ pairs: state.pairs, pair: nextPairState });
-    return { orders: newOrders, pairs: updatedPairs };
+    const updatedPairs = updatePairInPairs({ bondOffers: state.bondOffers, bondOffer: nextPairState });
+    return { orders: newOrders, bondOffers: updatedPairs };
   }
 };
 export type RemoveNftOrdersAndRecalculateCart = (params: {
-  state: { pairs: NftSwapPair[]; orders: Order[] };
+  state: { bondOffers: BondOfferV2[]; orders: Order[] };
 
   nftMint: string;
 }) => {
-  pairs: NftSwapPair[];
+  bondOffers: BondOfferV2[];
   orders: Order[];
 };
 
 export const removeNftOrdersAndRecalculateCart: RemoveNftOrdersAndRecalculateCart = ({ state, nftMint }) => {
   const ordersToPermanentlyRemove = state.orders.filter((order) => order.nftMint === nftMint);
-  const { pairs: updatedPairsAfterRemove, orders: updatedOrdersAfterRemove } = ordersToPermanentlyRemove.reduce(
+  const { bondOffers: updatedPairsAfterRemove, orders: updatedOrdersAfterRemove } = ordersToPermanentlyRemove.reduce(
     (prevState, currentOrder) => removeOrder({ state: prevState, order: currentOrder }),
     state,
   );
 
-  return { orders: updatedOrdersAfterRemove, pairs: updatedPairsAfterRemove };
+  return { orders: updatedOrdersAfterRemove, bondOffers: updatedPairsAfterRemove };
 };
 
 // const patch
 
-const patchPairToNextOrderAfterSell = (pair: NftSwapPair): NftSwapPair =>
-  pair.bidSettlement === pair.bidCap * -1
+const patchPairToNextOrderAfterSell = (bondOffer: BondOfferV2): BondOfferV2 =>
+  bondOffer.bidSettlement === bondOffer.bidCap * -1
     ? {
-        ...pair,
-        bidSettlement: pair.buyOrdersQuantity === 2 ? -(pair.bidCap - pair.edgeSettlement) : 0,
-        buyOrdersQuantity: pair.buyOrdersQuantity - 1,
+        ...bondOffer,
+        bidSettlement: bondOffer.buyOrdersQuantity === 2 ? -(bondOffer.bidCap - bondOffer.edgeSettlement) : 0,
+        buyOrdersQuantity: bondOffer.buyOrdersQuantity - 1,
         currentSpotPrice: calculateNextSpotPrice({
           orderType: OrderType.Sell,
-          spotPrice: pair.baseSpotPrice,
-          delta: pair.bondingCurve.delta,
-          bondingCurveType: pair.bondingCurve.bondingType,
-          counter: pair.mathCounter,
+          spotPrice: bondOffer.baseSpotPrice,
+          delta: bondOffer.bondingCurve.delta,
+          bondingCurveType: bondOffer.bondingCurve.bondingType,
+          counter: bondOffer.mathCounter,
         }),
-        mathCounter: pair.mathCounter - 1,
+        mathCounter: bondOffer.mathCounter - 1,
       }
-    : pair;
+    : bondOffer;
 
-export const getCurrentOrderSize = (pair: NftSwapPair) => {
-  if (pair.buyOrdersQuantity === 1) return pair.edgeSettlement;
-  else return pair.bidCap + pair.bidSettlement;
+export const getCurrentOrderSize = (bondOffer: BondOfferV2) => {
+  if (bondOffer.buyOrdersQuantity === 1) return bondOffer.edgeSettlement;
+  else return bondOffer.bidCap + bondOffer.bidSettlement;
 };
 
-export const getTopOrderSize = (pair: Pair) => {
-  const patchedPair = patchPairToNextOrderAfterSell(pair);
+export const getTopOrderSize = (bondOffer: BondOfferV2) => {
+  const patchedPair = patchPairToNextOrderAfterSell(bondOffer);
   if (patchedPair.buyOrdersQuantity <= 1) return patchedPair.edgeSettlement;
   else return patchedPair.bidCap + patchedPair.bidSettlement;
 };
 
-type FindPairByPubkey = (params: { pairs: NftSwapPair[]; pairPubkey: string }) => NftSwapPair;
-const findPairByPubkey: FindPairByPubkey = ({ pairs, pairPubkey }) =>
-  pairs.find((pair) => pair.publicKey === pairPubkey) as any;
+type FindPairByPubkey = (params: { bondOffers: BondOfferV2[]; pairPubkey: string }) => BondOfferV2;
+const findPairByPubkey: FindPairByPubkey = ({ bondOffers, pairPubkey }) =>
+  bondOffers.find((bondOffer) => bondOffer.publicKey === pairPubkey) as any;
 
-type UpdatePairInPairs = (params: { pairs: NftSwapPair[]; pair: NftSwapPair }) => NftSwapPair[];
-const updatePairInPairs: UpdatePairInPairs = ({ pairs, pair }) =>
-  pairs.map((sourcePair) => (sourcePair.publicKey === pair.publicKey ? pair : sourcePair));
+type UpdatePairInPairs = (params: { bondOffers: BondOfferV2[]; bondOffer: BondOfferV2 }) => BondOfferV2[];
+const updatePairInPairs: UpdatePairInPairs = ({ bondOffers, bondOffer }) =>
+  bondOffers.map((sourcePair) => (sourcePair.publicKey === bondOffer.publicKey ? bondOffer : sourcePair));
 const areOrdersEqual = (order1: Order, order2: Order) =>
   order1.pairPubkey === order2.pairPubkey &&
   order1.nftMint === order2.nftMint &&
@@ -216,71 +209,75 @@ const removeOrderInOrders: RemoveOrderInOrders = ({ orders, order }) =>
 type GetCheapestPairForBorrowValuePartial = (params: {
   borrowValueBonds: number;
   valuation: number;
-  pairs: Pair[];
+  bondOffers: BondOfferV2[];
   durationFilter: number;
-}) => Pair | null;
+}) => BondOfferV2 | null;
 export const getCheapestPairForBorrowValuePartial: GetCheapestPairForBorrowValuePartial = ({
   borrowValueBonds,
   valuation,
-  pairs,
+  bondOffers,
   durationFilter,
 }) => {
-  const suitablePairsByDuration = pairs.filter((p) => p.validation.durationFilter === durationFilter);
+  const suitablePairsByDuration = bondOffers.filter((p) => p.validation.durationFilter === durationFilter);
 
-  const suitableBySettlementAndValidation = suitablePairsByDuration.filter((pair) => {
-    const loanToValueLamports = valuation * (pair.validation.loanToValueFilter * 0.01 * 0.01);
+  const suitableBySettlementAndValidation = suitablePairsByDuration.filter((bondOffer) => {
+    const loanToValueLamports = valuation * (bondOffer.validation.loanToValueFilter * 0.01 * 0.01);
 
-    const orderSize = getCurrentOrderSize(pair);
+    const orderSize = getCurrentOrderSize(bondOffer);
 
     return (
       loanToValueLamports >= borrowValueBonds * BOND_DECIMAL_DELTA && orderSize >= EFFECTIVE_PAIR_ORDER_SIZE_THRESHOLD
     );
   });
 
-  return maxBy(suitableBySettlementAndValidation, (pair) => pair.currentSpotPrice) || null;
+  return maxBy(suitableBySettlementAndValidation, (bondOffer) => bondOffer.currentSpotPrice) || null;
 };
 
 type GetCheapestPairForBorrowValueWhole = (params: {
   borrowValueBonds: number;
   valuation: number;
-  pairs: Pair[];
+  bondOffers: BondOfferV2[];
   durationFilter: number;
-}) => Pair | null;
+}) => BondOfferV2 | null;
 export const getCheapestPairForBorrowValueWhole: GetCheapestPairForBorrowValueWhole = ({
   borrowValueBonds,
   valuation,
-  pairs,
+  bondOffers,
   durationFilter,
 }) => {
-  const suitablePairsByDuration = pairs.filter((p) => p.validation.durationFilter === durationFilter);
+  const suitablePairsByDuration = bondOffers.filter((p) => p.validation.durationFilter === durationFilter);
 
-  const suitableBySettlementAndValidation = suitablePairsByDuration.filter((pair) => {
-    const loanToValueLamports = valuation * (pair.validation.loanToValueFilter * 0.01 * 0.01);
+  const suitableBySettlementAndValidation = suitablePairsByDuration.filter((bondOffer) => {
+    const loanToValueLamports = valuation * (bondOffer.validation.loanToValueFilter * 0.01 * 0.01);
 
-    const orderSize = getCurrentOrderSize(pair);
+    const orderSize = getCurrentOrderSize(bondOffer);
 
     return loanToValueLamports >= borrowValueBonds * BOND_DECIMAL_DELTA && orderSize >= borrowValueBonds;
   });
 
-  return maxBy(suitableBySettlementAndValidation, (pair) => pair.currentSpotPrice) || null;
+  return maxBy(suitableBySettlementAndValidation, (bondOffer) => bondOffer.currentSpotPrice) || null;
 };
 
 export const BOND_DECIMAL_DELTA = 1e4;
 export const EFFECTIVE_PAIR_ORDER_SIZE_THRESHOLD = 1e2; // 0.1 BOND
 export const BASE_POINTS = 1e4;
 
-type GetMaxBorrowValue = (params: { pairs: Pair[]; collectionFloor: number; durationFilter: number }) => number; //? lamports
-export const getMaxBorrowValue: GetMaxBorrowValue = ({ pairs, collectionFloor, durationFilter }) => {
+type GetMaxBorrowValue = (params: {
+  bondOffers: BondOfferV2[];
+  collectionFloor: number;
+  durationFilter: number;
+}) => number; //? lamports
+export const getMaxBorrowValue: GetMaxBorrowValue = ({ bondOffers, collectionFloor, durationFilter }) => {
   const NFT_MINT_PLACEHOLDER = 'NFT_MINT_PLACEHOLDER';
-  const maxBorrowValues = pairs.map((pairToTry) => {
+  const maxBorrowValues = bondOffers.map((pairToTry) => {
     const loanToValueLamports = collectionFloor * (pairToTry.validation.loanToValueFilter / BASE_POINTS);
     const maxValueBonds = loanToValueLamports / BOND_DECIMAL_DELTA;
     let bondsLeft = maxValueBonds;
-    let currentState: { pairs: Pair[]; orders: Order[] } = { pairs, orders: [] };
+    let currentState: { bondOffers: BondOfferV2[]; orders: Order[] } = { bondOffers, orders: [] };
     let currentBestPair = getCheapestPairForBorrowValuePartial({
       borrowValueBonds: maxValueBonds,
       valuation: collectionFloor,
-      pairs: currentState.pairs,
+      bondOffers: currentState.bondOffers,
       durationFilter,
     });
 
@@ -296,11 +293,11 @@ export const getMaxBorrowValue: GetMaxBorrowValue = ({ pairs, collectionFloor, d
         orderSize,
         pairPubkey: currentBestPair.publicKey,
         nftMint: NFT_MINT_PLACEHOLDER,
-      }) as { pairs: Pair[]; orders: Order[] };
+      }) as { bondOffers: BondOfferV2[]; orders: Order[] };
       currentBestPair = getCheapestPairForBorrowValuePartial({
         borrowValueBonds: maxValueBonds,
         valuation: collectionFloor,
-        pairs: currentState.pairs,
+        bondOffers: currentState.bondOffers,
         durationFilter,
       });
     }
@@ -314,33 +311,33 @@ export const getMaxBorrowValue: GetMaxBorrowValue = ({ pairs, collectionFloor, d
   });
 
   const maxBorrowValue = max(maxBorrowValues) || 0;
-  //   const maxValueBonds = Math.min(pair.edgeSettlement, loanToValueLamports / BOND_DECIMAL_DELTA);
-  //   return maxValueBonds * pair.currentSpotPrice;
+  //   const maxValueBonds = Math.min(bondOffer.edgeSettlement, loanToValueLamports / BOND_DECIMAL_DELTA);
+  //   return maxValueBonds * bondOffer.currentSpotPrice;
   return maxBorrowValue;
 };
 
 type GetBondLoansCombinations = (params: {
-  pairs: Pair[];
+  bondOffers: BondOfferV2[];
   nfts: string[];
   collectionFloor: number;
   durationFilter: number;
-}) => { pairs: Pair[]; orders: Order[] }[]; //? lamports
+}) => { bondOffers: BondOfferV2[]; orders: Order[] }[]; //? lamports
 export const getBondLoansCombinations: GetBondLoansCombinations = ({
-  pairs,
+  bondOffers,
   nfts,
   collectionFloor,
   durationFilter,
 }) => {
   const NFT_MINT_PLACEHOLDER = 'NFT_MINT_PLACEHOLDER';
-  const loansCombinations = pairs.map((pairToTry) => {
+  const loansCombinations = bondOffers.map((pairToTry) => {
     const loanToValueLamports = collectionFloor * (pairToTry.validation.loanToValueFilter / BASE_POINTS);
     const maxValueBonds = loanToValueLamports / BOND_DECIMAL_DELTA;
     let nftsLeft = nfts;
-    let currentState: { pairs: Pair[]; orders: Order[] } = { pairs, orders: [] };
+    let currentState: { bondOffers: BondOfferV2[]; orders: Order[] } = { bondOffers, orders: [] };
     let currentBestPair = getCheapestPairForBorrowValuePartial({
       borrowValueBonds: maxValueBonds,
       valuation: collectionFloor,
-      pairs: currentState.pairs,
+      bondOffers: currentState.bondOffers,
       durationFilter,
     });
 
@@ -359,11 +356,11 @@ export const getBondLoansCombinations: GetBondLoansCombinations = ({
         orderSize,
         pairPubkey: currentBestPair.publicKey,
         nftMint: nftsLeft[0],
-      }) as { pairs: Pair[]; orders: Order[] };
+      }) as { bondOffers: BondOfferV2[]; orders: Order[] };
       currentBestPair = getCheapestPairForBorrowValuePartial({
         borrowValueBonds: maxValueBonds,
         valuation: collectionFloor,
-        pairs: currentState.pairs,
+        bondOffers: currentState.bondOffers,
         durationFilter,
       });
       nftsLeft.shift();
@@ -375,21 +372,29 @@ export const getBondLoansCombinations: GetBondLoansCombinations = ({
   return loansCombinations;
 };
 
-type GetBondLoansCombinationsSimple = (params: { pairs: Pair[]; nfts: string[]; collectionFloor: number }) => {
-  pairs: Pair[];
+type GetBondLoansCombinationsSimple = (params: {
+  bondOffers: BondOfferV2[];
+  nfts: string[];
+  collectionFloor: number;
+}) => {
+  bondOffers: BondOfferV2[];
   loanBonds: LoanBond[];
 }; //? lamports
-export const getBondLoansCombinationsSimple: GetBondLoansCombinationsSimple = ({ pairs, nfts, collectionFloor }) => {
+export const getBondLoansCombinationsSimple: GetBondLoansCombinationsSimple = ({
+  bondOffers,
+  nfts,
+  collectionFloor,
+}) => {
   const loanBonds: LoanBond[] = [];
-  let currentState: { pairs: Pair[]; orders: Order[] } = { pairs, orders: [] };
+  let currentState: { bondOffers: BondOfferV2[]; orders: Order[] } = { bondOffers, orders: [] };
 
   for (let nft of nfts) {
-    const maxBorrowValue = getMaxBorrowValueOptimized({ pairs, collectionFloor });
+    const maxBorrowValue = getMaxBorrowValueOptimized({ bondOffers, collectionFloor });
     if (!maxBorrowValue) break;
     let { takenOrders } = getBestOrdersByBorrowValue({
       borrowValue: maxBorrowValue,
       collectionFloor: collectionFloor,
-      pairs: currentState.pairs,
+      bondOffers: currentState.bondOffers,
     });
     // console.log('maxBorrowValue: ', maxBorrowValue, ', takenOrders: ', takenOrders);
 
@@ -399,7 +404,7 @@ export const getBondLoansCombinationsSimple: GetBondLoansCombinationsSimple = ({
         orderSize: order.orderSize,
         pairPubkey: order.pairPubkey,
         nftMint: nft,
-      }) as { pairs: Pair[]; orders: Order[] };
+      }) as { bondOffers: BondOfferV2[]; orders: Order[] };
     }
     const loanBond: LoanBond = takenOrders
       .map((order) => ({
@@ -419,64 +424,64 @@ export const getBondLoansCombinationsSimple: GetBondLoansCombinationsSimple = ({
     loanBonds.push(loanBond);
   }
 
-  return { loanBonds, pairs: currentState.pairs };
+  return { loanBonds, bondOffers: currentState.bondOffers };
 };
 // type GetPairMaxBorrowValue = (params: {
-//     pair: Pair;
+//     bondOffer: BondOfferV2;
 //     collectionFloor: number;
 //   }) => number; //? lamports
 //   export const getPairMaxBorrowValue: GetPairMaxBorrowValue = ({
-//     pair,
+//     bondOffer,
 //     collectionFloor,
 //   }) => {
 //     const loanToValueLamports =
-//       collectionFloor * (pair.validation.loanToValueFilter / 1e4);
+//       collectionFloor * (bondOffer.validation.loanToValueFilter / 1e4);
 //     const maxValueBonds = Math.min(
-//       pair.edgeSettlement,
+//       bondOffer.edgeSettlement,
 //       loanToValueLamports / BOND_DECIMAL_DELTA,
 //     );
-//     return maxValueBonds * pair.currentSpotPrice;
+//     return maxValueBonds * bondOffer.currentSpotPrice;
 //   };
 
 //   type GetPairWithMaxBorrowValue = (params: {
-//     pairs: Pair[];
+//     bondOffers: BondOfferV2[];
 //     collectionFloor: number;
 //     durationFilter?: number;
-//   }) => Pair;
+//   }) => BondOfferV2;
 //   export const getPairWithMaxBorrowValueWhole: GetPairWithMaxBorrowValue = ({
-//     pairs,
+//     bondOffers,
 //     collectionFloor,
 //     durationFilter = 7, //? Days
 //   }) => {
-//     const suitablePairsByDuration = pairs.filter((p) =>
-//       pairLoanDurationFilter({ pair: p, durationFilter }),
+//     const suitablePairsByDuration = bondOffers.filter((p) =>
+//       pairLoanDurationFilter({ bondOffer: p, durationFilter }),
 //     );
 
 //     const pairWithMaxBorrowValue = maxBy(suitablePairsByDuration, (p) =>
-//       getPairMaxBorrowValue({ pair: p, collectionFloor }),
+//       getPairMaxBorrowValue({ bondOffer: p, collectionFloor }),
 //     );
 
 //     return pairWithMaxBorrowValue;
 //   };
 
-type GetMaxBorrowValueOptimized = (params: { pairs: Pair[]; collectionFloor: number }) => number; //? lamports
-export const getMaxBorrowValueOptimized: GetMaxBorrowValueOptimized = ({ pairs, collectionFloor }) => {
-  const orders: Order[] = pairs
-    .reduce((orders, pair) => [...orders, ...rolloutOrdersFromPair({ pair })], [] as any)
+type GetMaxBorrowValueOptimized = (params: { bondOffers: BondOfferV2[]; collectionFloor: number }) => number; //? lamports
+export const getMaxBorrowValueOptimized: GetMaxBorrowValueOptimized = ({ bondOffers, collectionFloor }) => {
+  const orders: Order[] = bondOffers
+    .reduce((orders, bondOffer) => [...orders, ...rolloutOrdersFromPair({ bondOffer })], [] as any)
     .sort((a, b) => b.pricePerShare - a.pricePerShare);
-  const ltvByPairPubkey = pairs.reduce(
-    (acc, pair) => ({ ...acc, [pair.publicKey]: pair.validation.loanToValueFilter }),
+  const ltvByPairPubkey = bondOffers.reduce(
+    (acc, bondOffer) => ({ ...acc, [bondOffer.publicKey]: bondOffer.validation.loanToValueFilter }),
     {},
   );
-  const pairsSortedByLtv = pairs.sort(
+  const pairsSortedByLtv = bondOffers.sort(
     (pairA, pairB) => pairA.validation.loanToValueFilter - pairB.validation.loanToValueFilter,
   );
-  const maxBorrowValue = pairsSortedByLtv.reduce((maxBorrowValue, pair) => {
-    const loanToValueLamports = collectionFloor * (pair.validation.loanToValueFilter / BASE_POINTS);
+  const maxBorrowValue = pairsSortedByLtv.reduce((maxBorrowValue, bondOffer) => {
+    const loanToValueLamports = collectionFloor * (bondOffer.validation.loanToValueFilter / BASE_POINTS);
     const maxSizeBonds = loanToValueLamports / BOND_DECIMAL_DELTA;
 
     const borrowValueForThisPair = orders
-      .filter((order) => ltvByPairPubkey[order.pairPubkey] >= pair.validation.loanToValueFilter)
+      .filter((order) => ltvByPairPubkey[order.pairPubkey] >= bondOffer.validation.loanToValueFilter)
       .reduce(
         (borrowValueAndSize, order) => ({
           borrowValue:
@@ -488,38 +493,46 @@ export const getMaxBorrowValueOptimized: GetMaxBorrowValueOptimized = ({ pairs, 
 
     return Math.max(borrowValueForThisPair.borrowValue, maxBorrowValue);
   }, 0);
-  // const borrowValues = pairs.
+  // const borrowValues = bondOffers.
   return maxBorrowValue;
 };
 
-type GetBestOrdersByBorrowValue = (params: { pairs: Pair[]; collectionFloor: number; borrowValue: number }) => {
+type GetBestOrdersByBorrowValue = (params: {
+  bondOffers: BondOfferV2[];
+  collectionFloor: number;
+  borrowValue: number;
+}) => {
   maxBorrowValue: number;
   takenOrders: Order[];
 }; //? lamports
-export const getBestOrdersByBorrowValue: GetBestOrdersByBorrowValue = ({ pairs, collectionFloor, borrowValue }) => {
-  const originalOrders: Order[] = pairs
-    .reduce((ordersRolled, pair) => [...ordersRolled, ...rolloutOrdersFromPair({ pair })], [] as any)
+export const getBestOrdersByBorrowValue: GetBestOrdersByBorrowValue = ({
+  bondOffers,
+  collectionFloor,
+  borrowValue,
+}) => {
+  const originalOrders: Order[] = bondOffers
+    .reduce((ordersRolled, bondOffer) => [...ordersRolled, ...rolloutOrdersFromPair({ bondOffer })], [] as any)
     .sort((a, b) => b.pricePerShare - a.pricePerShare);
-  const ltvByPairPubkey = pairs.reduce(
-    (acc, pair) => ({ ...acc, [pair.publicKey]: pair.validation.loanToValueFilter }),
+  const ltvByPairPubkey = bondOffers.reduce(
+    (acc, bondOffer) => ({ ...acc, [bondOffer.publicKey]: bondOffer.validation.loanToValueFilter }),
     {},
   );
 
-  // console.log('pairs: ', pairs);
+  // console.log('bondOffers: ', bondOffers);
 
   // console.log('ltvByPairPubkey: ', ltvByPairPubkey);
-  const pairsSortedByLtv = pairs.sort(
+  const pairsSortedByLtv = bondOffers.sort(
     (pairA, pairB) => pairA.validation.loanToValueFilter - pairB.validation.loanToValueFilter,
   );
   // console.log('pairsSortedByLtv: ', pairsSortedByLtv)
   const maxBorrowValueAndOrders = pairsSortedByLtv.reduce(
-    ({ takenOrders, maxBorrowValue }, pair) => {
+    ({ takenOrders, maxBorrowValue }, bondOffer) => {
       if (maxBorrowValue >= borrowValue) return { maxBorrowValue, takenOrders };
-      const loanToValueLamports = collectionFloor * (pair.validation.loanToValueFilter / BASE_POINTS);
+      const loanToValueLamports = collectionFloor * (bondOffer.validation.loanToValueFilter / BASE_POINTS);
       const maxSizeBonds = loanToValueLamports / BOND_DECIMAL_DELTA;
 
       const ordersByPair = originalOrders
-        .filter((order) => ltvByPairPubkey[order.pairPubkey] >= pair.validation.loanToValueFilter)
+        .filter((order) => ltvByPairPubkey[order.pairPubkey] >= bondOffer.validation.loanToValueFilter)
         .reduce(
           (borrowValueAndSize, order) => {
             const fullOrderSize = Math.min(borrowValueAndSize.size, order.orderSize);
@@ -558,27 +571,32 @@ export const getBestOrdersByBorrowValue: GetBestOrdersByBorrowValue = ({ pairs, 
     },
     { maxBorrowValue: 0 as number, takenOrders: originalOrders as any },
   );
-  // const borrowValues = pairs.
+  // const borrowValues = bondOffers.
   return {
     ...maxBorrowValueAndOrders,
     takenOrders: maxBorrowValueAndOrders.takenOrders.filter((takenOrder) => takenOrder.orderSize > 0),
   };
 };
 
-type GetBestOrdersForExit = (params: { pairs: Pair[]; loanToValueFilter: number; amountOfBonds: number }) => {
+type GetBestOrdersForExit = (params: {
+  bondOffers: BondOfferV2[];
+  loanToValueFilter: number;
+  amountOfBonds: number;
+}) => {
   maxBorrowValue: number;
   takenOrders: Order[];
 }; //? lamports
-export const getBestOrdersForExit: GetBestOrdersForExit = ({ pairs, loanToValueFilter, amountOfBonds }) => {
-  const pairsFilteredLtv = pairs
-    .filter((pair) => pair.validation.loanToValueFilter >= loanToValueFilter)
-    .filter((pair) => pair.buyOrdersQuantity > 0);
+export const getBestOrdersForExit: GetBestOrdersForExit = ({ bondOffers, loanToValueFilter, amountOfBonds }) => {
+  const pairsFilteredLtv = bondOffers
+    .filter((bondOffer) => bondOffer.validation.loanToValueFilter >= loanToValueFilter)
+    .filter((bondOffer) => bondOffer.buyOrdersQuantity > 0)
+    .filter((bondOffer) => bondOffer.fundsSolOrTokenBalance > 0);
 
   const originalOrders: Order[] = pairsFilteredLtv
-    .reduce((ordersRolled, pair) => [...ordersRolled, ...rolloutOrdersFromPair({ pair })], [] as any)
+    .reduce((ordersRolled, bondOffer) => [...ordersRolled, ...rolloutOrdersFromPair({ bondOffer })], [] as any)
     .sort((a, b) => b.pricePerShare - a.pricePerShare);
 
-  // console.log('pairs: ', pairs);
+  // console.log('bondOffers: ', bondOffers);
 
   // console.log('ltvByPairPubkey: ', ltvByPairPubkey);
   // console.log('pairsSortedByLtv: ', pairsSortedByLtv)
@@ -604,25 +622,39 @@ export const getBestOrdersForExit: GetBestOrdersForExit = ({ pairs, loanToValueF
   //     remainingBondsToSell: amountOfBonds,
   //   },
   // );
-  // const borrowValues = pairs.
+  // const borrowValues = bondOffers.
+  // const actualAmountOfBondsAvailableForExit = sumBy(maxBorrowValueAndOrders.takenOrders, (order) => order.orderSize);
+  // if (actualAmountOfBondsAvailableForExit < amountOfBonds)
+  //   return {
+  //     maxBorrowValue: 0,
+  //     takenOrders: [],
+  //   };
   return {
     ...maxBorrowValueAndOrders,
     takenOrders: maxBorrowValueAndOrders.takenOrders.filter((takenOrder) => takenOrder.orderSize > 0),
   };
 };
 
-type GetBestOrdersForRefinance = (params: { pairs: Pair[]; loanToValueFilter: number; amountOfBonds: number }) => {
+type GetBestOrdersForRefinance = (params: {
+  bondOffers: BondOfferV2[];
+  loanToValueFilter: number;
+  amountOfBonds: number;
+}) => {
   maxBorrowValue: number;
   takenOrders: Order[];
   remainingBondsToSell: number;
 } | null; //? lamports
-export const getBestOrdersForRefinance: GetBestOrdersForRefinance = ({ pairs, loanToValueFilter, amountOfBonds }) => {
-  const pairsFilteredLtv = pairs
-    .filter((pair) => pair.validation.loanToValueFilter >= loanToValueFilter)
-    .filter((pair) => pair.buyOrdersQuantity > 0);
+export const getBestOrdersForRefinance: GetBestOrdersForRefinance = ({
+  bondOffers,
+  loanToValueFilter,
+  amountOfBonds,
+}) => {
+  const pairsFilteredLtv = bondOffers
+    .filter((bondOffer) => bondOffer.validation.loanToValueFilter >= loanToValueFilter)
+    .filter((bondOffer) => bondOffer.buyOrdersQuantity > 0);
 
-  const originalOrdersByPairs: Order[][] = pairsFilteredLtv.map((pair) =>
-    rolloutOrdersFromPair({ pair }).sort((a, b) => b.pricePerShare - a.pricePerShare),
+  const originalOrdersByPairs: Order[][] = pairsFilteredLtv.map((bondOffer) =>
+    rolloutOrdersFromPair({ bondOffer }).sort((a, b) => b.pricePerShare - a.pricePerShare),
   );
 
   const refinanceOptions = originalOrdersByPairs.map((orders) => takeBestOrders({ orders, amountOfBonds }));
@@ -667,37 +699,37 @@ export const takeBestOrders: TakeBestOrders = ({ orders, amountOfBonds }) => {
       remainingBondsToSell: amountOfBonds,
     },
   );
-  // const borrowValues = pairs.
+  // const borrowValues = bondOffers.
   return maxBorrowValueAndOrders;
 };
 
-type RolloutOrdersFromPair = (params: { pair: Pair }) => Order[]; //? lamports
-export const rolloutOrdersFromPair: RolloutOrdersFromPair = ({ pair }) => {
+type RolloutOrdersFromPair = (params: { bondOffer: BondOfferV2 }) => Order[]; //? lamports
+export const rolloutOrdersFromPair: RolloutOrdersFromPair = ({ bondOffer }) => {
   const orders: Order[] = [];
-  // console.log('pair: ', pair);
-  // pair: spot price 1 SOL, Delta: 0.1 SOL, buyOrders: 3, size:5 => {1 SOL, size:5}, {0.9 SOL, size}
+  // console.log('bondOffer: ', bondOffer);
+  // bondOffer: spot price 1 SOL, Delta: 0.1 SOL, buyOrders: 3, size:5 => {1 SOL, size:5}, {0.9 SOL, size}
   for (
-    let currentCounter = pair.mathCounter;
-    currentCounter > pair.mathCounter - pair.buyOrdersQuantity;
+    let currentCounter = bondOffer.mathCounter;
+    currentCounter > bondOffer.mathCounter - bondOffer.buyOrdersQuantity;
     currentCounter--
   ) {
     const currentOrderSize =
-      currentCounter === pair.mathCounter - pair.buyOrdersQuantity + 1
-        ? pair.edgeSettlement
-        : currentCounter === pair.mathCounter
-        ? getCurrentOrderSize(pair)
-        : pair.bidCap;
+      currentCounter === bondOffer.mathCounter - bondOffer.buyOrdersQuantity + 1
+        ? bondOffer.edgeSettlement
+        : currentCounter === bondOffer.mathCounter
+        ? getCurrentOrderSize(bondOffer)
+        : bondOffer.bidCap;
     const currentSpotPrice = calculateNextSpotPrice({
       orderType: OrderType.Sell,
-      spotPrice: pair.baseSpotPrice,
-      delta: pair.bondingCurve.delta,
-      bondingCurveType: pair.bondingCurve.bondingType,
+      spotPrice: bondOffer.baseSpotPrice,
+      delta: bondOffer.bondingCurve.delta,
+      bondingCurveType: bondOffer.bondingCurve.bondingType,
       counter: currentCounter + 1,
     });
     const order: Order = {
       mathCounter: currentCounter,
       nftMint: '',
-      pairPubkey: pair.publicKey,
+      pairPubkey: bondOffer.publicKey,
       pricePerShare: currentSpotPrice,
       orderSize: currentOrderSize,
     };

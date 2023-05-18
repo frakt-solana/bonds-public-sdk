@@ -34,11 +34,11 @@ export const liquidateFBond: LiquidateFBond = async ({ programId, connection, ac
   const program = returnAnchorProgram(programId, connection);
   const instructions: web3.TransactionInstruction[] = [];
 
-  const [bondProgramAuthority, bondProgramAuthoritySeed] = await web3.PublicKey.findProgramAddress(
+  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );
-  const [returnFundsOwner, returnFundsOwnerSeed] = await web3.PublicKey.findProgramAddress(
+  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );

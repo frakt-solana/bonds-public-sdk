@@ -6,13 +6,14 @@ import {
   BOND_PROOGRAM_AUTHORITY_PREFIX,
   ENCODER,
   METADATA_PROGRAM_PUBKEY,
+  MUTUAL_BOND_TRADE_TXN_VAULT,
 } from '../../constants';
 import { SOL_FUNDS_PREFIX, RETURN_FUNDS_OWNER_PREFIX, AUTOCOMPOUND_DEPOSIT_PREFIX } from '../../constants';
 
 import { findTokenRecordPda, getMetaplexEditionPda, getMetaplexMetadata, returnAnchorProgram } from '../../helpers';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata';
 
-type RedeemAutocompoundAndAutoreceiveLiquidatedNft = (params: {
+type RedeemBondTradeTransactionAndReceiveNft = (params: {
   programId: web3.PublicKey;
   connection: web3.Connection;
   addComputeUnits: boolean;
@@ -22,12 +23,11 @@ type RedeemAutocompoundAndAutoreceiveLiquidatedNft = (params: {
     fbond: web3.PublicKey;
     fbondsTokenMint: web3.PublicKey;
     collateralBox: web3.PublicKey;
-    pair: web3.PublicKey;
     collateralTokenMint: web3.PublicKey;
     collateralTokenAccount: web3.PublicKey;
     collateralOwner: web3.PublicKey;
     assetReceiver: web3.PublicKey;
-    // autocompoundDeposit: web3.PublicKey;
+    bondTradeTransactionV2: web3.PublicKey;
   };
 
   sendTxn: (transaction: web3.Transaction, signers: web3.Signer[]) => Promise<void>;
@@ -36,7 +36,7 @@ type RedeemAutocompoundAndAutoreceiveLiquidatedNft = (params: {
   signers: web3.Signer[];
 }>;
 
-export const redeemAutocompoundAndAutoreceiveLiquidatedNft: RedeemAutocompoundAndAutoreceiveLiquidatedNft = async ({
+export const redeemBondTradeTransactionAndReceiveNft: RedeemBondTradeTransactionAndReceiveNft = async ({
   programId,
   connection,
   addComputeUnits,
@@ -46,31 +46,23 @@ export const redeemAutocompoundAndAutoreceiveLiquidatedNft: RedeemAutocompoundAn
   const program = returnAnchorProgram(programId, connection);
   const instructions: web3.TransactionInstruction[] = [];
 
-  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
-    [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), accounts.fbond.toBuffer()],
-    program.programId,
-  );
-  const [solFundsVault, solVaultSeed] = await web3.PublicKey.findProgramAddress(
-    [ENCODER.encode(SOL_FUNDS_PREFIX), accounts.pair.toBuffer()],
-    program.programId,
-  );
-
-  const autocompoundBondsTokenAccount = await findAssociatedTokenAddress(solFundsVault, accounts.fbondsTokenMint);
-
   const assetReceiverTokenAccount = await findAssociatedTokenAddress(
     accounts.assetReceiver,
     accounts.collateralTokenMint,
   );
   const userMiddleTokenAccount = await findAssociatedTokenAddress(accounts.userPubkey, accounts.collateralTokenMint);
 
-  const [autocompoundDeposit] = await web3.PublicKey.findProgramAddress(
-    [ENCODER.encode(AUTOCOMPOUND_DEPOSIT_PREFIX), accounts.fbondsTokenMint.toBuffer(), accounts.pair.toBuffer()],
-    program.programId,
-  );
   const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );
+
+  const [mutualBondTradeTxnVault] = await web3.PublicKey.findProgramAddress(
+    [ENCODER.encode(MUTUAL_BOND_TRADE_TXN_VAULT)],
+    program.programId,
+  );
+
+  const bondTradeTxnTokenAccount = await findAssociatedTokenAddress(mutualBondTradeTxnVault, accounts.fbondsTokenMint);
 
   const editionInfo = getMetaplexEditionPda(accounts.collateralTokenMint);
   const nftMetadata = getMetaplexMetadata(accounts.collateralTokenMint);
@@ -87,7 +79,7 @@ export const redeemAutocompoundAndAutoreceiveLiquidatedNft: RedeemAutocompoundAn
 
   instructions.push(
     await program.methods
-      .redeemAutocompoundAndAutoreceiveLiquidatedNft(null)
+      .redeemBondTradeTransactionAndReceiveNft(null)
       .accountsStrict({
         fbond: accounts.fbond,
 
@@ -101,10 +93,10 @@ export const redeemAutocompoundAndAutoreceiveLiquidatedNft: RedeemAutocompoundAn
         collateralOwner: accounts.collateralOwner,
         bondProgramAuthority: bondProgramAuthority,
 
-        autocompoundDeposit: autocompoundDeposit,
-        autocompoundBondsTokenAccount: autocompoundBondsTokenAccount,
-        pair: accounts.pair,
-        fundsSolVault: solFundsVault,
+        bondTradeTransactionV2: accounts.bondTradeTransactionV2,
+        bondTradeTxnTokenAccount: bondTradeTxnTokenAccount,
+        mutualBondTradeTxnVault: mutualBondTradeTxnVault,
+
         user: accounts.userPubkey,
         tokenMint: accounts.collateralTokenMint,
         assetReceiver: accounts.assetReceiver,

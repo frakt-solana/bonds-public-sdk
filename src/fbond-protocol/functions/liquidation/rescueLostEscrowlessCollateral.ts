@@ -33,7 +33,7 @@ export const rescueLostEscrowlessCollateral: RescueLostEscrowlessCollateral = as
   const program = returnAnchorProgram(programId, connection);
   const instructions: web3.TransactionInstruction[] = [];
 
-  const [bondProgramAuthority, bondProgramAuthoritySeed] = await web3.PublicKey.findProgramAddress(
+  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );

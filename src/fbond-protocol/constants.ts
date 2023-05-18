@@ -20,6 +20,9 @@ export const FEE_PREFIX = 'fee_vault';
 export const TOKEN_RECORD = 'token_record';
 
 export const SOL_FUNDS_PREFIX = 'sol_funds_vault';
+export const BOND_OFFER_PREFIX = 'bond_offer_prefix';
+
+export const MUTUAL_BOND_TRADE_TXN_VAULT = 'mutual_bond_trade_txn_vault';
 
 export const NFTS_OWNER_PREFIX = 'nfts_owner';
 

@@ -27,9 +27,16 @@ type CreateBondWithSingleCollateral = (params: {
   fbond: web3.PublicKey;
   fbondTokenMint: web3.PublicKey;
   collateralBox: web3.PublicKey;
+  bondProgramAuthority: web3.PublicKey;
+  returnFundsOwner: web3.PublicKey;
+  userTokenAccount: web3.PublicKey;
+  collateralTokenAccount: web3.PublicKey;
+  userFbondTokenAccount: web3.PublicKey;
+  editionInfo: web3.PublicKey;
 
   instructions: web3.TransactionInstruction[];
   signers: web3.Signer[];
+  addressesForLookupTable: web3.PublicKey[];
 }>;
 
 export const createBondWithSingleCollateral: CreateBondWithSingleCollateral = async ({
@@ -44,12 +51,12 @@ export const createBondWithSingleCollateral: CreateBondWithSingleCollateral = as
   const fbond = web3.Keypair.generate();
   const fbondsTokenMint = web3.Keypair.generate();
 
-  const [bondProgramAuthority, bondProgramAuthoritySeed] = await web3.PublicKey.findProgramAddress(
+  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
 
-  const [returnFundsOwner, returnFundsOwnerSeed] = await web3.PublicKey.findProgramAddress(
+  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
@@ -63,46 +70,40 @@ export const createBondWithSingleCollateral: CreateBondWithSingleCollateral = as
   const collateralTokenAccount = await findAssociatedTokenAddress(bondProgramAuthority, accounts.tokenMint);
   const userFbondTokenAccount = await findAssociatedTokenAddress(accounts.userPubkey, fbondsTokenMint.publicKey);
   const editionInfo = getMetaplexEditionPda(accounts.tokenMint);
+  const accountsIntoInstruction = {
+    fbond: fbond.publicKey,
+    bondProgramAuthority: bondProgramAuthority,
 
+    fbondTokenMint: fbondsTokenMint.publicKey,
+    user: accounts.userPubkey,
+
+    userFbondTokenAccount: userFbondTokenAccount,
+
+    collateralBox: collateralBox,
+    tokenMint: accounts.tokenMint,
+    userTokenAccount: userTokenAccount,
+    collateralTokenAccount: collateralTokenAccount,
+
+    tokenProgram: TOKEN_PROGRAM_ID,
+    associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+    systemProgram: web3.SystemProgram.programId,
+    rent: web3.SYSVAR_RENT_PUBKEY,
+    metadataProgram: METADATA_PROGRAM_PUBKEY,
+    editionInfo: editionInfo,
+  };
   instructions.push(
     await program.methods
-      .createBondWithSingleCollateral(
-        {
-          bondProgramAuthoritySeed,
-          returnFundsOwnerSeed,
-        },
-        new BN(args.amountToDeposit),
-        {
-          amountToReturn: new BN(args.amountToReturn),
-          bondDuration: new BN(args.bondDuration),
-        },
-      )
-      .accountsStrict({
-        fbond: fbond.publicKey,
-        bondProgramAuthority: bondProgramAuthority,
-
-        fbondTokenMint: fbondsTokenMint.publicKey,
-        user: accounts.userPubkey,
-
-        userFbondTokenAccount: userFbondTokenAccount,
-
-        collateralBox: collateralBox,
-        tokenMint: accounts.tokenMint,
-        userTokenAccount: userTokenAccount,
-        collateralTokenAccount: collateralTokenAccount,
-
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-        systemProgram: web3.SystemProgram.programId,
-        rent: web3.SYSVAR_RENT_PUBKEY,
-        metadataProgram: METADATA_PROGRAM_PUBKEY,
-        editionInfo: editionInfo,
+      .createBondWithSingleCollateral({}, new BN(args.amountToDeposit), {
+        amountToReturn: new BN(args.amountToReturn),
+        bondDuration: new BN(args.bondDuration),
       })
+      .accountsStrict(accountsIntoInstruction)
       .instruction(),
   );
 
   const transaction = new web3.Transaction();
   for (let instruction of instructions) transaction.add(instruction);
+  const addressesForLookupTable = [...Object.values(accountsIntoInstruction)];
 
   const signers = [fbond, fbondsTokenMint];
   await sendTxn(transaction, signers);
@@ -110,7 +111,15 @@ export const createBondWithSingleCollateral: CreateBondWithSingleCollateral = as
     fbond: fbond.publicKey,
     fbondTokenMint: fbondsTokenMint.publicKey,
     collateralBox: collateralBox,
+    bondProgramAuthority: bondProgramAuthority,
+    returnFundsOwner: returnFundsOwner,
+    userTokenAccount: userTokenAccount,
+    collateralTokenAccount: collateralTokenAccount,
+    userFbondTokenAccount: userFbondTokenAccount,
+    editionInfo: editionInfo,
+
     instructions,
     signers,
+    addressesForLookupTable,
   };
 };

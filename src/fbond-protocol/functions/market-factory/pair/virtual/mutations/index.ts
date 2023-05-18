@@ -6,3 +6,7 @@ export * from './putPairOnMarket';
 export * from './closeVirtualPair';
 export * from './initializeAndDepositTokenForNftPair';
 export * from './initializeDepositAndCreateValidationTokenForNftPair';
+export * from './createBondOfferV2';
+export * from './removeBondOfferV2';
+export * from './updateBondOfferV2';
+export * from './migratePairToBondOfferV2';

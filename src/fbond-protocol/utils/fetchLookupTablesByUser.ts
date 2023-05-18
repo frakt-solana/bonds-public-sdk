@@ -2,15 +2,15 @@ import { web3 } from '@project-serum/anchor';
 import { BondEventType } from '../types';
 import { BOND_DECIMAL_DELTA } from './cartManager';
 
-export const getBondEvents = async ({
-  programId,
+export const fetchLookupTablesByUser = async ({
+  user,
   fromThisSignature,
   eventslimit,
   signaturesLimit,
   untilThisSignature,
   connection,
 }: {
-  programId: web3.PublicKey;
+  user: web3.PublicKey;
   fromThisSignature?: string;
   eventslimit?: number;
   signaturesLimit?: number;
@@ -23,7 +23,7 @@ export const getBondEvents = async ({
   let allSignaturesInfos: web3.ConfirmedSignatureInfo[] = [];
   const currentLastSignatureInfo = (
     await connection.getConfirmedSignaturesForAddress2(
-      programId,
+      user,
       {
         limit: 1,
       },
@@ -34,7 +34,7 @@ export const getBondEvents = async ({
   let currentLastSignature = fromThisSignature || currentLastSignatureInfo.signature;
   if (currentLastSignature == untilThisSignature) return [];
   let newSignatureInfosLatestToPast = await connection.getConfirmedSignaturesForAddress2(
-    programId,
+    user,
     {
       limit: LIMIT,
       before: currentLastSignature,
@@ -53,7 +53,7 @@ export const getBondEvents = async ({
     allSignaturesInfos.length < limitSig
   ) {
     newSignatureInfosLatestToPast = await connection.getConfirmedSignaturesForAddress2(
-      programId,
+      user,
       {
         limit: LIMIT,
         before: currentLastSignature,
@@ -67,39 +67,67 @@ export const getBondEvents = async ({
       (signatureInfo) => !signatureInfo.err,
     );
   }
-  const bondTransactions: web3.ParsedTransactionWithMeta[] = await getBondTransactionsFromSignatures({
+  const lookupTables: web3.PublicKey[] = await fetchLookupTablesByUserBySignatures({
     signatures: allSignaturesInfos.map((signatureInfo) => signatureInfo.signature),
     connection,
   });
-  let allBondEvents: BondEvent[] = [];
 
-  for (let bondTxn of bondTransactions) {
-    const bondEvents = await parseTransactionInfoToBondEvents({ bondTxn, connection });
-    allBondEvents = [...allBondEvents, ...bondEvents];
-  }
-
-  return allBondEvents;
+  return lookupTables;
 };
 
-export const getBondEventsBySignatures = async ({
+export const fetchLookupTablesByUserBySignatures = async ({
   signatures,
   connection,
 }: {
   signatures: string[];
   connection: web3.Connection;
-}): Promise<BondEvent[]> => {
-  const bondTransactions: web3.ParsedTransactionWithMeta[] = await getBondTransactionsFromSignatures({
+}): Promise<web3.PublicKey[]> => {
+  const lookupTables: web3.PublicKey[] = await getLookupTablesBySignatures({
     signatures,
     connection,
   });
 
-  let allbondEvents: BondEvent[] = [];
-  for (let bondTxn of bondTransactions) {
-    const bondEvents = await parseTransactionInfoToBondEvents({ bondTxn, connection });
-    allbondEvents = [...allbondEvents, ...bondEvents];
-  }
+  // let allbondEvents: BondEvent[] = [];
+  // for (let bondTxn of bondTransactions) {
+  //   const bondEvents = await parseTransactionInfoToBondEvents({ bondTxn, connection });
+  //   allbondEvents = [...allbondEvents, ...bondEvents];
+  // }
 
-  return allbondEvents;
+  return lookupTables;
+};
+
+export const getLookupTablesBySignatures = async ({
+  signatures,
+  connection,
+}: {
+  signatures: string[];
+  connection: web3.Connection;
+}): Promise<web3.PublicKey[]> => {
+  const lookupTables: web3.PublicKey[] = [];
+  for (let signature of signatures) {
+    const currentTransactionInfo: web3.ParsedTransactionWithMeta | null = await connection.getParsedTransaction(
+      signature,
+      {
+        commitment: 'confirmed',
+        maxSupportedTransactionVersion: 0,
+      },
+    );
+
+    const LOOKUP_TABLES_PROGRAM_ID = 'AddressLookupTab1e1111111111111111111111111';
+    // console.log('currentTransactionInfo: ', JSON.stringify(currentTransactionInfo?.transaction, null, 2));
+    const instructions = currentTransactionInfo?.transaction.message.instructions;
+    if (
+      !currentTransactionInfo ||
+      !instructions ||
+      !instructions.find((ix) => ix.programId.toBase58() === LOOKUP_TABLES_PROGRAM_ID) ||
+      instructions.length === 1
+    )
+      continue;
+
+    const currentLookupTable = (instructions[0] as any).accounts[0];
+    lookupTables.push(currentLookupTable.toBase58() as any);
+  }
+  return lookupTables;
 };
 
 export const getBondTransactionsFromSignatures = async ({
@@ -119,6 +147,7 @@ export const getBondTransactionsFromSignatures = async ({
       },
     );
 
+    console.log('currentTransactionInfo: ', JSON.stringify(currentTransactionInfo?.transaction, null, 2));
     if (!currentTransactionInfo || !isBondTransactionInfo(currentTransactionInfo as any)) continue;
     bondTransactions.push(currentTransactionInfo as any);
   }
@@ -148,7 +177,7 @@ const parseTransactionInfoToBondEvents = async ({
   let bondEvents: BondEvent[] = [];
   for (let i = 0; i < innerInstructions.length; i++) {
     const currentLog = instructionLogs[i];
-
+    console.log('currentLog: ', currentLog);
     if (!isBondInstructionLog(currentLog)) continue;
     const currentSignature = bondTxn.transaction.signatures[0];
 

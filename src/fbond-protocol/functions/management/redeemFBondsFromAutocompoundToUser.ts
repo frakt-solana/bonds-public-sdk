@@ -25,12 +25,16 @@ type RedeemFbondsFromAutocompoundToUser = (params: {
   signers: web3.Signer[];
 }>;
 
-export const redeemFbondsFromAutocompoundToUser: RedeemFbondsFromAutocompoundToUser = async ({ programId, connection, accounts, sendTxn }) => {
+export const redeemFbondsFromAutocompoundToUser: RedeemFbondsFromAutocompoundToUser = async ({
+  programId,
+  connection,
+  accounts,
+  sendTxn,
+}) => {
   const program = returnAnchorProgram(programId, connection);
   const instructions: web3.TransactionInstruction[] = [];
 
-
-  const [returnFundsOwner, returnFundsOwnerSeed] = await web3.PublicKey.findProgramAddress(
+  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), accounts.fbond.toBuffer()],
     program.programId,
   );

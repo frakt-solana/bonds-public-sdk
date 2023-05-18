@@ -1,12 +1,12 @@
 export interface FraktBond {
   fraktBondState: FraktBondState;
-  bondProgramAuthoritySeed: number;
+  bondTradeTransactionsCounter: number;
   collateralBoxesQuantity: number;
   returnTokenMint: string;
-  returnTokenAccount: string;
+  fraktMarket: string;
   amountToReturn: number;
   actualReturnedAmount: number;
-  returnFundsOwnerSeed: number;
+  terminatedCounter: number;
   fbondTokenMint: string;
   fbondTokenSupply: number;
   activatedAt: number;
@@ -23,6 +23,11 @@ export enum FraktBondState {
   Repaid = 'repaid',
   Liquidating = 'liquidating',
   Liquidated = 'liquidated',
+}
+export enum BondTradeTransactionV2State {
+  NotActive = 'notActive',
+
+  Active = 'active',
 }
 
 export interface CollateralBox {
@@ -93,7 +98,7 @@ export interface HadoMarket {
   pairValidationType: PairValidationType;
   validationAdapterProgram: string;
   minBidCap: number;
-  marketDecimals: number;
+  minMarketFee: number;
   pairTokenType: PairTokenType;
   pairTokenMint: string;
   publicKey: string;
@@ -134,6 +139,55 @@ export enum WhitelistType {
   Creator = 'creator',
 }
 
+export interface BondOfferV2 {
+  hadoMarket: string;
+  pairState: PairState;
+  bondingCurve: BondingCurve;
+  baseSpotPrice: number;
+  mathCounter: number;
+  currentSpotPrice: number;
+  concentrationIndex: number;
+  bidCap: number;
+  bidSettlement: number;
+  edgeSettlement: number;
+  fundsSolOrTokenBalance: number;
+  buyOrdersQuantity: number;
+  lastTransactedAt: number;
+  assetReceiver: string;
+  validation: {
+    loanToValueFilter: number;
+    durationFilter: number;
+    maxReturnAmountFilter: number;
+    bondFeatures: BondFeatures;
+  };
+  publicKey: string;
+}
+
+export interface BondTradeTransactionV2 {
+  bondTradeTransactionState: BondTradeTransactionV2State;
+  bondOffer: string;
+  user: string;
+  amountOfBonds: number;
+  solAmount: number;
+  feeAmount: number;
+  bondTradeTransactionType: BondTradeTransactionV2Type;
+  fbondTokenMint: string;
+  soldAt: number;
+  redeemedAt: number;
+  redeemResult: RedeemResult;
+  seller: string;
+  isDirectSell: boolean;
+  publicKey: string;
+}
+
+export enum RedeemResult {
+  None = 'none',
+  AutoReceiveSol = 'autoReceiveSol',
+  Autocompound = 'autocompound',
+  Nft = 'nft',
+  ExitSol = 'exitSol',
+}
+
 export interface NftSwapPair {
   hadoMarket: string;
   pairType: PairType;
@@ -172,6 +226,7 @@ export enum PairState {
   OnMarketVirtual = 'onMarketVirtual',
   OnMarketTokenized = 'onMarketTokenized',
   Frozen = 'frozen',
+  Closed = 'closed',
 }
 
 export enum PairAuthorityType {
@@ -274,12 +329,22 @@ export interface AutocompoundDeposit {
 export enum AutocompoundDepositState {
   NotActive = 'notActive',
   Active = 'active',
+  Removed = 'removed',
+}
+
+export enum BondTradeTransactionV2Type {
+  None = 'none',
+  Autocompound = 'autocompound',
+  ReceiveNftOnLiquidation = 'receiveNftOnLiquidation',
+  AutoreceiveSol = 'autoreceiveSol',
+  AutoCompoundAndReceiveNft = 'autoCompoundAndReceiveNft',
+  AutoReceiveAndReceiveNft = 'autoReceiveAndReceiveNft',
 }
 
 export enum AutocompoundType {
   Autocompound = 'autocompound',
   AutoreceiveSol = 'autoreceiveSol',
-  AutocompoundAndReceiveNft = 'autocompoundAndReceiveNft'
+  AutocompoundAndReceiveNft = 'autocompoundAndReceiveNft',
 }
 
 export enum BondEventType {

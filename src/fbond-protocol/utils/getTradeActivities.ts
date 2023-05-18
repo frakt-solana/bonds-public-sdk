@@ -191,10 +191,13 @@ export interface TradeActivity {
 
   nftMint: string;
   solAmount: number;
+  feeAmount?: number;
 
   amountOfTokens: number;
   userMaker: string | null;
   userTaker: string;
+  isDirectSell?: boolean;
+  isV2?: boolean;
 }
 
 enum TradeInstruction {

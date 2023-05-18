@@ -9,7 +9,7 @@ type InitializeHadoMarket = (params: {
 
   args: {
     minBidCap: number;
-    marketDecimals: number;
+    minMarketFee: number;
   };
   accounts: {
     userPubkey: web3.PublicKey;
@@ -34,7 +34,7 @@ export const initializeHadoMarket: InitializeHadoMarket = async ({
     await program.methods
       .initializeHadoMarket({
         minBidCap: new BN(args.minBidCap),
-        marketDecimals: new BN(args.marketDecimals),
+        minMarketFee: new BN(args.minMarketFee),
       })
       .accounts({
         hadoMarket: hadoMarket.publicKey,

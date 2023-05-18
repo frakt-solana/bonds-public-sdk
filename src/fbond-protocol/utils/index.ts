@@ -1,3 +1,6 @@
 export * as cartManager from './cartManager';
 export { getTradeActivities, TradeActivity, getTradeActivitiesBySignatures } from './getTradeActivities';
-export { getBondEvents, BondEvent, getBondEventsBySignatures} from './getBondEvents';
+export { getBondEvents, BondEvent, getBondEventsBySignatures } from './getBondEvents';
+export * as cartManagerV2 from './cartManagerV2';
+export { getTradeActivitiesV2 } from './getTradeActivitiesV2';
+export { fetchLookupTablesByUser, fetchLookupTablesByUserBySignatures } from './fetchLookupTablesByUser';

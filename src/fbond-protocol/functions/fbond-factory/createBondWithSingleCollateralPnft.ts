@@ -33,9 +33,19 @@ type CreateBondWithSingleCollateralPnft = (params: {
   fbond: web3.PublicKey;
   fbondTokenMint: web3.PublicKey;
   collateralBox: web3.PublicKey;
+  bondProgramAuthority: web3.PublicKey;
+  returnFundsOwner: web3.PublicKey;
+  userTokenAccount: web3.PublicKey;
+  collateralTokenAccount: web3.PublicKey;
+  userFbondTokenAccount: web3.PublicKey;
+  editionInfo: web3.PublicKey;
+  nftMetadata: web3.PublicKey;
+  ownerTokenRecord: web3.PublicKey;
+  destTokenRecord: web3.PublicKey;
 
   instructions: web3.TransactionInstruction[];
   signers: web3.Signer[];
+  addressesForLookupTable: web3.PublicKey[];
 }>;
 
 export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralPnft = async ({
@@ -50,12 +60,12 @@ export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralP
   const fbond = web3.Keypair.generate();
   const fbondsTokenMint = web3.Keypair.generate();
 
-  const [bondProgramAuthority, bondProgramAuthoritySeed] = await web3.PublicKey.findProgramAddress(
+  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
 
-  const [returnFundsOwner, returnFundsOwnerSeed] = await web3.PublicKey.findProgramAddress(
+  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
@@ -84,45 +94,44 @@ export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralP
   });
 
   instructions.push(modifyComputeUnits);
-  console.log(
-    'passing createBondWithSingleCollateralPnft:',
-    anchorRawBNsAndPubkeysToNumsAndStrings({
-      account: {
-        fbond: fbond.publicKey,
-        bondProgramAuthority: bondProgramAuthority,
 
-        fbondTokenMint: fbondsTokenMint.publicKey,
-        user: accounts.userPubkey,
+  const accountsIntoInstruction = {
+    fbond: fbond.publicKey,
+    bondProgramAuthority: bondProgramAuthority,
 
-        userFbondTokenAccount: userFbondTokenAccount,
+    fbondTokenMint: fbondsTokenMint.publicKey,
+    user: accounts.userPubkey,
 
-        collateralBox: collateralBox,
-        tokenMint: accounts.tokenMint,
-        userTokenAccount: userTokenAccount,
-        collateralTokenAccount: collateralTokenAccount,
-        ownerTokenRecord,
-        destTokenRecord,
-        nftMetadata,
-        instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
-        authorizationRulesProgram: AUTHORIZATION_RULES_PROGRAM,
+    userFbondTokenAccount: userFbondTokenAccount,
 
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-        systemProgram: web3.SystemProgram.programId,
-        rent: web3.SYSVAR_RENT_PUBKEY,
-        metadataProgram: METADATA_PROGRAM_PUBKEY,
-        editionInfo: editionInfo,
-      },
-      publicKey: ruleSet || METADATA_PROGRAM_PUBKEY,
-    }),
-  );
+    collateralBox: collateralBox,
+    tokenMint: accounts.tokenMint,
+    userTokenAccount: userTokenAccount,
+    collateralTokenAccount: collateralTokenAccount,
+    ownerTokenRecord,
+    destTokenRecord,
+    nftMetadata,
+    instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
+    authorizationRulesProgram: AUTHORIZATION_RULES_PROGRAM,
+
+    tokenProgram: TOKEN_PROGRAM_ID,
+    associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+    systemProgram: web3.SystemProgram.programId,
+    rent: web3.SYSVAR_RENT_PUBKEY,
+    metadataProgram: METADATA_PROGRAM_PUBKEY,
+    editionInfo: editionInfo,
+  };
+  // console.log(
+  //   'passing createBondWithSingleCollateralPnft:',
+  //   anchorRawBNsAndPubkeysToNumsAndStrings({
+  //     account: accountsIntoInstruction,
+  //     publicKey: ruleSet || METADATA_PROGRAM_PUBKEY,
+  //   }),
+  // );
   instructions.push(
     await program.methods
       .createBondWithSingleCollateralPnft(
-        {
-          bondProgramAuthoritySeed,
-          returnFundsOwnerSeed,
-        },
+        {},
         new BN(args.amountToDeposit),
         {
           amountToReturn: new BN(args.amountToReturn),
@@ -130,32 +139,7 @@ export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralP
         },
         null,
       )
-      .accountsStrict({
-        fbond: fbond.publicKey,
-        bondProgramAuthority: bondProgramAuthority,
-
-        fbondTokenMint: fbondsTokenMint.publicKey,
-        user: accounts.userPubkey,
-
-        userFbondTokenAccount: userFbondTokenAccount,
-
-        collateralBox: collateralBox,
-        tokenMint: accounts.tokenMint,
-        userTokenAccount: userTokenAccount,
-        collateralTokenAccount: collateralTokenAccount,
-        ownerTokenRecord,
-        destTokenRecord,
-        nftMetadata,
-        instructions: web3.SYSVAR_INSTRUCTIONS_PUBKEY,
-        authorizationRulesProgram: AUTHORIZATION_RULES_PROGRAM,
-
-        tokenProgram: TOKEN_PROGRAM_ID,
-        associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
-        systemProgram: web3.SystemProgram.programId,
-        rent: web3.SYSVAR_RENT_PUBKEY,
-        metadataProgram: METADATA_PROGRAM_PUBKEY,
-        editionInfo: editionInfo,
-      })
+      .accountsStrict(accountsIntoInstruction)
       .remainingAccounts([
         {
           pubkey: ruleSet || METADATA_PROGRAM_PUBKEY,
@@ -170,6 +154,8 @@ export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralP
       ])
       .instruction(),
   );
+  const remainingAccounts = [...(ruleSet ? [ruleSet] : []), ...(delegatePubkey ? [delegatePubkey] : [])];
+  const addressesForLookupTable = [...Object.values(accountsIntoInstruction), ...remainingAccounts];
 
   const transaction = new web3.Transaction();
   for (let instruction of instructions) transaction.add(instruction);
@@ -180,7 +166,17 @@ export const createBondWithSingleCollateralPnft: CreateBondWithSingleCollateralP
     fbond: fbond.publicKey,
     fbondTokenMint: fbondsTokenMint.publicKey,
     collateralBox: collateralBox,
+    bondProgramAuthority,
+    returnFundsOwner,
+    userTokenAccount,
+    collateralTokenAccount,
+    userFbondTokenAccount,
+    editionInfo,
+    nftMetadata,
+    ownerTokenRecord,
+    destTokenRecord,
     instructions,
     signers,
+    addressesForLookupTable,
   };
 };

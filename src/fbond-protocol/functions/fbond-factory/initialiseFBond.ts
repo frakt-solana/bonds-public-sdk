@@ -27,22 +27,19 @@ export const initializeFBond: InitializeFBond = async ({ programId, connection, 
   const fbond = web3.Keypair.generate();
   const fbondsTokenMint = web3.Keypair.generate();
 
-  const [bondProgramAuthority, bondProgramAuthoritySeed] = await web3.PublicKey.findProgramAddress(
+  const [bondProgramAuthority] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(BOND_PROOGRAM_AUTHORITY_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
 
-  const [returnFundsOwner, returnFundsOwnerSeed] = await web3.PublicKey.findProgramAddress(
+  const [returnFundsOwner] = await web3.PublicKey.findProgramAddress(
     [ENCODER.encode(RETURN_FUNDS_OWNER_PREFIX), fbond.publicKey.toBuffer()],
     program.programId,
   );
 
   instructions.push(
     await program.methods
-      .initializeFbond({
-        bondProgramAuthoritySeed,
-        returnFundsOwnerSeed,
-      })
+      .initializeFbond({})
       .accounts({
         fbond: fbond.publicKey,
         bondProgramAuthority: bondProgramAuthority,

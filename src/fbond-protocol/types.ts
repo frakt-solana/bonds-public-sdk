@@ -1,4 +1,4 @@
-import { PublicKey, Signer, TransactionInstruction } from '@solana/web3.js';
+import { Commitment, Connection, PublicKey, Signer, Transaction, TransactionInstruction } from '@solana/web3.js';
 
 export interface FraktBond {
   fraktBondState: FraktBondState;
@@ -344,6 +344,22 @@ export interface InstructionsAndSigners {
     tablePubkey: PublicKey;
     addresses: PublicKey[];
   }[];
+}
+
+interface TxnsAndSigners {
+  transaction: Transaction;
+  signers?: Signer[];
+}
+
+interface SignAndSendAllTransactionsProps {
+  transactionsAndSigners: TxnsAndSigners[];
+  connection: Connection;
+  wallet: any;
+  commitment?: Commitment;
+  onBeforeApprove?: () => void;
+  onAfterSend?: () => void;
+  onSuccess?: () => void;
+  onError?: (error: any) => void;
 }
 
 export enum AutocompoundDepositState {

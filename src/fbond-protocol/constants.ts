@@ -34,3 +34,9 @@ export const EMPTY_PUBKEY = new web3.PublicKey('11111111111111111111111111111111
 export const ENCODER = new TextEncoder();
 
 export const BASE_POINTS = 10000;
+
+export const BOND_DECIMAL_DELTA = 1e4;
+export const PRECISION_CORRECTION_LAMPORTS = 10000; //? 200%
+export const BONDS_PROGRAM_PUBKEY = '4tdmkuY6EStxbS6Y8s5ueznL3VPMSugrvQuDeAHGZhSt';
+export const BONDS_ADMIN_PUBKEY = '9J4yDqU6wBkdhP5bmJhukhsEzBkaAXiBmii52kTdxpQq';
+export const PUBKEY_PLACEHOLDER = '11111111111111111111111111111111';

@@ -1,3 +1,5 @@
+import { PublicKey, Signer, TransactionInstruction } from '@solana/web3.js';
+
 export interface FraktBond {
   fraktBondState: FraktBondState;
   bondTradeTransactionsCounter: number;
@@ -324,6 +326,24 @@ export interface AutocompoundDeposit {
   solAmount: number;
   redeemedAt: number;
   publicKey: string;
+}
+
+export interface BondCartOrder {
+  orderSize: number; //? lamports
+  spotPrice: number; //? lamports
+  pairPubkey: string;
+  assetReceiver: string;
+  durationFilter: number;
+  bondFeature: BondFeatures;
+}
+
+export interface InstructionsAndSigners {
+  instructions: TransactionInstruction[];
+  signers?: Signer[];
+  lookupTablePublicKeys: {
+    tablePubkey: PublicKey;
+    addresses: PublicKey[];
+  }[];
 }
 
 export enum AutocompoundDepositState {

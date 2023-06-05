@@ -11,7 +11,8 @@ import {
   PublicKey,
 } from '@solana/web3.js';
 import { TxnsAndSigners } from './signAndSendAllTransactionsInSequence';
-import { LOOKUP_TABLE } from '../constants';
+import { LOOKUP_TABLE, TXNS_IN_ONE_SIGN_FOR_LEDGER } from '../constants';
+import { chunk } from 'lodash';
 
 const STANDART_LOOKUP_TABLE = new PublicKey(LOOKUP_TABLE);
 
@@ -37,6 +38,10 @@ type SignAndSendV0TransactionWithLookupTablesSeparateSignatures = (props: {
 
   connection: Connection;
   wallet: any;
+
+  isLedger?: boolean;
+  skipTimeout?: boolean;
+  skipPreflight?: boolean;
   commitment?: Commitment;
   onBeforeApprove?: () => void;
   onAfterSend?: () => void;
@@ -54,9 +59,13 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
     extendLookupTableTxns,
     v0InstructionsAndSigners,
     fastTrackInstructionsAndSigners,
-
     connection,
     wallet,
+
+    isLedger,
+    skipTimeout,
+    skipPreflight,
+
     commitment = 'confirmed',
     onBeforeApprove,
     onAfterSend,
@@ -64,6 +73,126 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
     onError,
   }) => {
     try {
+      if (isLedger) {
+        for (const txnAndSigners of chunk(notBondTxns, TXNS_IN_ONE_SIGN_FOR_LEDGER)) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [...txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            skipTimeout: true,
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of createLookupTableTxns.map((transaction) => ({
+          transaction,
+          signers: [],
+        }))) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            skipTimeout: true,
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of extendLookupTableTxns.map((transaction) => ({
+          transaction,
+          signers: [],
+        }))) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [txnAndSigners],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [],
+
+            skipTimeout: true,
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+
+        for (const txnAndSigners of v0InstructionsAndSigners) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [txnAndSigners],
+            fastTrackInstructionsAndSigners: [],
+
+            skipTimeout: true,
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            connection,
+            wallet,
+            commitment,
+            onAfterSend,
+            onSuccess,
+            onError,
+          });
+        }
+        console.log(
+          ' fastTrackInstructionsAndSigners length: ',
+          fastTrackInstructionsAndSigners.map((transaction) => ({
+            transaction,
+            signers: [],
+          })).length,
+        );
+        for (const txnsAndSigners of chunk(fastTrackInstructionsAndSigners, TXNS_IN_ONE_SIGN_FOR_LEDGER)) {
+          await signAndSendV0TransactionWithLookupTablesSeparateSignatures({
+            notBondTxns: [],
+            createLookupTableTxns: [],
+            extendLookupTableTxns: [],
+            v0InstructionsAndSigners: [],
+            fastTrackInstructionsAndSigners: [...txnsAndSigners],
+            // lookupTablePublicKey: bondTransactionsAndSignersChunks,
+            isLedger: false,
+            skipTimeout: true,
+
+            connection,
+            wallet,
+            commitment,
+            onAfterSend: () => {},
+            onSuccess: () => {},
+            onError: () => {},
+          });
+        }
+
+        // const allTransactionsAndSigners: TxnsAndSigners[] = [
+        //   ...notBondTxns,
+        //   ...createLookupTableTxns.map(transaction => ({ transaction, signers: [] })),
+        //   ...extendLookupTableTxns.map(transaction => ({ transaction, signers: [] })),
+        //   ...v0InstructionsAndSigners.map(instructionAndSigners => ({ transaction: new web3.Transaction().add(...instructionAndSigners.instructions), signers: instructionAndSigners. })),
+
+        // ]
+
+        return true;
+      }
+
       const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
       const fastTrackV0Transactions = await Promise.all(
         fastTrackInstructionsAndSigners.map(async (ixAndSigner) => {
@@ -118,6 +247,7 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           return transaction;
         }),
       ];
+
       const signedTransactionsLookupTables = await wallet.signAllTransactions([...transactionsFlatArrLookupTables]);
 
       // const txnsAndSignersWithV0Txns = [
@@ -135,13 +265,17 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
           const txn = signedTransactionsLookupTables[currentTxIndexLookupTable];
           // lastSlot = await connection.getSlot();
           const tx = await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
+            skipPreflight: !!skipPreflight,
             preflightCommitment: 'processed',
           });
           currentTxIndexLookupTable += 1;
           // console.log("MinContextSlot: ", txn.minNonceContextSlot)
         }
-        await new Promise((r) => setTimeout(r, 8000));
+        if (!!skipTimeout === false || fastTrackV0Transactions.length < currentTxIndexLookupTable)
+          await new Promise((r) => setTimeout(r, 8000));
+        else {
+          new Promise((r) => setTimeout(r, 2000));
+        }
       }
 
       const addressesPerTxn = 20;
@@ -241,28 +375,29 @@ export const signAndSendV0TransactionWithLookupTablesSeparateSignatures: SignAnd
 
       const v0MainAndCloseTableTxns = [...v0Transactions, ...deactivateLookupTableTxns];
 
-      const signedTransactions = await wallet.signAllTransactions([...v0MainAndCloseTableTxns]);
+      if (v0MainAndCloseTableTxns.length > 0) {
+        const signedTransactions = await wallet.signAllTransactions([...v0MainAndCloseTableTxns]);
 
-      const txnsAndSignersWithV0Txns = [v0MainAndCloseTableTxns];
+        const txnsAndSignersWithV0Txns = [v0MainAndCloseTableTxns];
 
-      let currentTxIndex = 0;
-      for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
-        for (let r = 0; r < txnsAndSignersWithV0Txns[i].length; r++) {
-          if (txnsAndSigners[i].length === 0) continue;
+        let currentTxIndex = 0;
+        for (let i = 0; i < txnsAndSignersWithV0Txns.length; i++) {
+          for (let r = 0; r < txnsAndSignersWithV0Txns[i].length; r++) {
+            if (txnsAndSigners[i].length === 0) continue;
 
-          console.log('currentTxIndex: ', currentTxIndex);
-          const txn = signedTransactions[currentTxIndex];
-          // lastSlot = await connection.getSlot();
-          const tx = await connection.sendRawTransaction(txn.serialize(), {
-            skipPreflight: false,
-            preflightCommitment: 'processed',
-          });
-          currentTxIndex += 1;
-          // console.log("MinContextSlot: ", txn.minNonceContextSlot)
+            console.log('currentTxIndex: ', currentTxIndex);
+            const txn = signedTransactions[currentTxIndex];
+            // lastSlot = await connection.getSlot();
+            const tx = await connection.sendRawTransaction(txn.serialize(), {
+              skipPreflight: !!skipPreflight,
+              preflightCommitment: 'processed',
+            });
+            currentTxIndex += 1;
+            // console.log("MinContextSlot: ", txn.minNonceContextSlot)
+          }
+          if (currentTxIndex < signedTransactions.length - 1) await new Promise((r) => setTimeout(r, 7000));
         }
-        await new Promise((r) => setTimeout(r, 7000));
       }
-
       // const signedTransactionsV0 = await wallet.signAllTransactions(
       //   v0Transactions,
       // );

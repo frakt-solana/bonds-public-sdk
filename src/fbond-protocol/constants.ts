@@ -34,6 +34,7 @@ export const EMPTY_PUBKEY = new web3.PublicKey('11111111111111111111111111111111
 export const ENCODER = new TextEncoder();
 
 export const BASE_POINTS = 10000;
+export const TXNS_IN_ONE_SIGN_FOR_LEDGER = 5;
 
 export const BOND_DECIMAL_DELTA = 1e4;
 export const PRECISION_CORRECTION_LAMPORTS = 10000; //? 200%

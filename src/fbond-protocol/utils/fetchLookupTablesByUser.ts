@@ -209,14 +209,12 @@ const isBondInstructionLog = (log: string) => Object.values<string>(BondInstruct
 //   log === BondInstruction.RepayFbond ||
 //   log === BondInstruction.ExtractCollateralToLiquidate ||
 //   log === BondInstruction.DepositReturnedSolToLiquidatingBond ||
-//   log === BondInstruction.LiquidateFBond ||
-//   log === BondInstruction.RedeemFbonds;
+//   log === BondInstruction.LiquidateFBond ;
 
 // const isBondInstructionLog = (log: string) =>
 //     log === BondInstruction.BuyNftFromPair ||
 //     log === BondInstruction.SellNftToTokenToNftPair ||
 //     log === BondInstruction.SellNftToLiquidityPair ||
-//     log === BondInstruction.ValidateAndSellNftToTokenToNftPair ||
 //     log === BondInstruction.CreateBondWithSingleCollateral;
 
 const isInstructionLog = (log: string) => log.startsWith('Program log: Instruction:');
@@ -242,25 +240,11 @@ enum BondInstruction {
   RepayFbond = 'Program log: Instruction: RepayFbond',
   ExtractCollateralToLiquidate = 'Program log: Instruction: ExtractCollateralToLiquidate',
 
-  CreateBondWithSingleCollateralPnft = 'Program log: Instruction: CreateBondWithSingleCollateralPnft',
   ExtractCollateralToLiquidatePnft = 'Program log: Instruction: ExtractCollateralToLiquidatePnft',
   LiquidateReceivingNftFbondPnft = 'Program log: Instruction: LiquidateReceivingNftFbondPnft',
 
   DepositReturnedSolToLiquidatingBond = 'Program log: Instruction: DepositReturnedSolToLiquidatingBond',
   LiquidateFBond = 'Program log: Instruction: LiquidateFBond',
-  RedeemAutocompoundAndAutoreceiveLiquidatedNft = 'Program log: Instruction: RedeemAutocompoundAndAutoreceiveLiquidatedNft',
-
-  RedeemFbonds = 'Program log: Instruction: RedeemFbonds',
-  RedeemFbondsFromAutocompoundToUser = 'Program log: Instruction: RedeemFbondsFromAutocompoundToUser',
-  RedeemFbondsAutoreceiveSol = 'Program log: Instruction: RedeemFbondsAutoreceiveSol',
-  RedeemFbondsFromAutocompoundToPair = 'Program log: Instruction: RedeemFbondsFromAutocompoundToPair',
-
-  RedeemBondTradeTransactionAutoreceive = 'Program log: Instruction: RedeemBondTradeTransactionAutoreceive',
-  RedeemBondTradeTransactionAutocompound = 'Program log: Instruction: RedeemBondTradeTransactionAutocompound',
-  RedeemBondTradeTransactionAndReceiveNft = 'Program log: Instruction: RedeemBondTradeTransactionAndReceiveNft',
-
-  // RedeemFbondsAutoreceiveSol = 'Program log: Instruction: RedeemFbondsAutoreceiveSol',
-  // RedeemFbondsFromAutocompoundToPair = 'Program log: Instruction: RedeemFbondsFromAutocompoundToPair',
 }
 
 const BOND_TRANSACTION_PARSERS = {
@@ -467,80 +451,7 @@ const BOND_TRANSACTION_PARSERS = {
       },
     ];
   },
-  [BondInstruction.RedeemAutocompoundAndAutoreceiveLiquidatedNft]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
 
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Liquidated;
-    const user = programInstruction.accounts[9];
-    const fbond = programInstruction.accounts[0];
-
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: null,
-      },
-    ];
-  },
-
-  [BondInstruction.RedeemBondTradeTransactionAndReceiveNft]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    // const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Liquidated;
-    const user = programInstruction.accounts[11];
-    const fbond = programInstruction.accounts[0];
-    const nft = programInstruction.accounts[6];
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: null,
-        bondsAmount: bondsAmount,
-        nft: nft ? nft.toBase58() : '',
-      },
-    ];
-  },
   [BondInstruction.LiquidateReceivingNftFbondPnft]: async ({
     innerInstruction,
     programInstruction,
@@ -576,268 +487,8 @@ const BOND_TRANSACTION_PARSERS = {
       },
     ];
   },
-  [BondInstruction.RedeemFbonds]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
 
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    const user = programInstruction.accounts[5];
-    const fbond = programInstruction.accounts[0];
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-  [BondInstruction.RedeemFbondsFromAutocompoundToUser]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    const user = programInstruction.accounts[7];
-    const fbond = programInstruction.accounts[0];
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-  [BondInstruction.RedeemFbondsFromAutocompoundToPair]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    const user = programInstruction.accounts[7];
-    const fbond = programInstruction.accounts[0];
-    const pair = programInstruction.accounts[5];
-
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-        pair: pair ? pair.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-
-  [BondInstruction.RedeemBondTradeTransactionAutocompound]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructionsWithoutFee(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    // const user = programInstruction.accounts[7];
-    const assetReceiver = programInstruction.accounts[8];
-
-    const fbond = programInstruction.accounts[0];
-    const pair = programInstruction.accounts[4];
-
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: assetReceiver ? assetReceiver.toBase58() : '',
-        pair: pair ? pair.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-  [BondInstruction.RedeemFbondsAutoreceiveSol]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    const user = programInstruction.accounts[8];
-    const fbond = programInstruction.accounts[0];
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-
-  [BondInstruction.RedeemBondTradeTransactionAutoreceive]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const solAmount = getTransferAmountFromInnerInstructionsWithoutFee(innerInstruction);
-    const bondEventType = BondEventType.Redeem;
-    const assetReceiver = programInstruction.accounts[7];
-    const fbond = programInstruction.accounts[0];
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any).parsed?.type == 'burn') as any)?.parsed
-      ?.info?.amount;
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: assetReceiver ? assetReceiver.toBase58() : '',
-
-        solAmount: solAmount,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
   [BondInstruction.CreateBondWithSingleCollateral]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<BondEvent[]> => {
-    const bondEventType = BondEventType.Creation;
-    const bondsAmount = (innerInstruction.instructions.find((ix) => (ix as any)?.parsed?.type == 'mintTo') as any)
-      ?.parsed?.info?.amount;
-    const user = programInstruction.accounts[3];
-    const fbond = programInstruction.accounts[0];
-    return [
-      {
-        timestamp: blockTime,
-        signature: signature,
-        bondEventType: bondEventType,
-
-        fbond: fbond ? fbond.toBase58() : '',
-        user: user ? user.toBase58() : '',
-
-        solAmount: null,
-        bondsAmount: bondsAmount,
-      },
-    ];
-  },
-  [BondInstruction.CreateBondWithSingleCollateralPnft]: async ({
     innerInstruction,
     programInstruction,
     signature,

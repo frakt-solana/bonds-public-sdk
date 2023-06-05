@@ -3,1506 +3,6 @@ export type Bonds = {
   "name": "bonds",
   "instructions": [
     {
-      "name": "initializeFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        }
-      ]
-    },
-    {
-      "name": "addCollateralBox",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "activateFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "repayFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemFbonds",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "getRepaidCollateralPnft",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "getRepaidCollateral",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "liquidateFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "rescueLostEscrowlessCollateral",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositReturnedSolToLiquidatingBond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "extractCollateralToLiquidatePnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "liquidateReceivingNftFbondPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "extractCollateralToLiquidate",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "updateActualReturnedAmount",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setBondCollateralOrSolReceiver",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "unsetBondCollateralOrSolReceiver",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createBondWithSingleCollateralPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "createBondWithSingleCollateral",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "createValidation",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        },
-        {
-          "name": "bondFeatures",
-          "type": {
-            "defined": "BondFeatures"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateValidation",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        }
-      ]
-    },
-    {
       "name": "boundHadoMarketToFraktMarket",
       "accounts": [
         {
@@ -1537,136 +37,6 @@ export type Bonds = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "initializePair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        }
-      ]
     },
     {
       "name": "createBondOfferV2",
@@ -1739,176 +109,6 @@ export type Bonds = {
       ]
     },
     {
-      "name": "migratePairToBondOfferV2",
-      "accounts": [
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bondOfferRandomSeed",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setBondFraktMarket",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "migrateAutocompoundToBondTradeTransaction",
-      "accounts": [
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK optional validation"
-          ]
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK mutual_bond_trade_txn_vault"
-          ]
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bondOfferRandomSeed",
-          "type": "u64"
-        }
-      ]
-    },
-    {
       "name": "updateBondOfferV2",
       "accounts": [
         {
@@ -1949,81 +149,6 @@ export type Bonds = {
         },
         {
           "name": "maxReturnAmountFilter",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "createClassicAuthorityAdapter",
-      "accounts": [
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositSolToPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountOfTokensToBuy",
           "type": "u64"
         }
       ]
@@ -2086,128 +211,6 @@ export type Bonds = {
       "args": [
         {
           "name": "amountOfTokensToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "validateNft",
-      "accounts": [
-        {
-          "name": "nftValidationAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validationWhitelist",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositNftToPair",
-      "accounts": [
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
           "type": "u64"
         }
       ]
@@ -2288,877 +291,6 @@ export type Bonds = {
       "args": []
     },
     {
-      "name": "addClassicWhitelistToMarket",
-      "accounts": [
-        {
-          "name": "validationWhitelist",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistedAddress",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "whitelistType",
-          "type": {
-            "defined": "NftValidationWhitelistType"
-          }
-        }
-      ]
-    },
-    {
-      "name": "depositLiquidityToPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "putPairOnMarket",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "buyNftFromPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "maxAmountToPay",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToBuy",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "sellNftToLiquidityPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newVaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSolFromPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountOfTokensToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawNftFromPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromBalancedPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "modifyPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromBuyOrdersPair",
-      "accounts": [
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromSellOrdersPair",
-      "accounts": [
-        {
-          "name": "nftPairBoxFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMintFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccountFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccountFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftPairBoxSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMintSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccountSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccountSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityOrderVirtualFees",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "makeLiquidityPairTokenized",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "closeVirtualNftSwapPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "removeBondOfferV2",
       "accounts": [
         {
@@ -3183,339 +315,6 @@ export type Bonds = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "customValidateNft",
-      "accounts": [
-        {
-          "name": "nftValidationAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK might be empty"
-          ]
-        },
-        {
-          "name": "whitelistedAddress",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "adapterProgramSigner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "duration",
-          "type": "u64"
-        },
-        {
-          "name": "nftValidationWhitelistType",
-          "type": {
-            "defined": "NftValidationWhitelistType"
-          }
-        },
-        {
-          "name": "scopeType",
-          "type": {
-            "defined": "ScopeType"
-          }
-        }
-      ]
-    },
-    {
-      "name": "validateAndSellNftToTokenToNftPair",
-      "accounts": [
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "proof",
-          "type": {
-            "vec": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "validateAndSellToBondOffersV2",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "sellBondParams",
-          "type": {
-            "vec": {
-              "defined": "SellBondParams"
-            }
-          }
-        }
-      ]
     },
     {
       "name": "repayFbondToTradeTransactions",
@@ -3611,6 +410,14 @@ export type Bonds = {
           "isSigner": false
         },
         {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -3618,6 +425,11 @@ export type Bonds = {
         {
           "name": "rent",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userFbondTokenAccount",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -3718,1958 +530,6 @@ export type Bonds = {
       ]
     },
     {
-      "name": "initializeAndDepositTokenForNftPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        },
-        {
-          "name": "amountOfTokensToBuy",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initializeDepositAndCreateValidationTokenForNftPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        },
-        {
-          "name": "amountOfTokensToBuy",
-          "type": "u64"
-        },
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        },
-        {
-          "name": "bondFeatures",
-          "type": {
-            "defined": "BondFeatures"
-          }
-        }
-      ]
-    },
-    {
-      "name": "initializeFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanFeePoints",
-          "type": "u16"
-        }
-      ]
-    },
-    {
-      "name": "depositSolToFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSolFromFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "takeFlashLoan",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK : instructions"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToBorrow",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "repayFlashLoan",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK : instructions"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToRepay",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "mortgageBuyNftSellBondToTokenForNftPair",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "crossMintAmmPairFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapNftPairBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapPairNftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairFeeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairVaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairAssetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapProtocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "proof",
-          "type": {
-            "vec": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        },
-        {
-          "name": "maxAmountToPay",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "redeemFbondsFromAutocompoundToPair",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK asset_receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAutoreceive",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAutocompound",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAndReceiveNft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "redeemFbondsFromAutocompoundToUser",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemFbondsAutoreceiveSol",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemAutocompoundAndAutoreceiveLiquidatedNft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "claimFbondsFromAutocompoundDeposit",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToClaim",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "refinanceFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "newBondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userNewFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newFbondBumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "newFbondParams",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "refinanceFbondPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "newBondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userNewFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newFbondBumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "newFbondParams",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        },
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "refinanceToBondOffersV2",
       "accounts": [
         {
@@ -5684,11 +544,6 @@ export type Bonds = {
         },
         {
           "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
           "isMut": true,
           "isSigner": false
         },
@@ -6061,111 +916,929 @@ export type Bonds = {
           }
         }
       ]
+    },
+    {
+      "name": "liquidateBondOnAuction",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "returnFundsOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "liquidateBondOnAuctionPnft",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "middleTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthorityTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "returnFundsOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "claimNftByLender",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondTradeTxnTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "bondTradeTransactionV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "claimNftByLenderPnft",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondTradeTxnTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "middleTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthorityTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "bondTradeTransactionV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "createBondAndSellToOffersForTest",
+      "accounts": [
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hadoRegistry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "protocolFeeReceiver",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bumps",
+          "type": {
+            "defined": "FBondBumps"
+          }
+        },
+        {
+          "name": "amountToDeposit",
+          "type": "u64"
+        },
+        {
+          "name": "params",
+          "type": {
+            "defined": "FBondParams"
+          }
+        },
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        },
+        {
+          "name": "sellBondParams",
+          "type": {
+            "vec": {
+              "defined": "SellBondParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "patchBondOffer",
+      "accounts": [
+        {
+          "name": "bondOfferV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
     {
-      "name": "adapterWhitelist",
+      "name": "collateralBox",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "whitelistedAdapterProgram",
+            "name": "fbond",
             "type": "publicKey"
           },
           {
-            "name": "adapterType",
+            "name": "collateralBoxType",
             "type": {
-              "defined": "AdapterType"
+              "defined": "CollateralBoxType"
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "authorityAdapter",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityOwner",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityType",
-            "type": {
-              "defined": "AuthorityAdapterType"
-            }
-          },
-          {
-            "name": "expiringAt",
-            "type": "u64"
-          },
-          {
-            "name": "authorityState",
-            "type": {
-              "defined": "AuthorityState"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "autocompoundDeposit",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fraktBondState",
-            "type": {
-              "defined": "AutocompoundDepositState"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "user",
-            "type": "publicKey"
-          },
-          {
-            "name": "amountOfBonds",
-            "type": "u64"
-          },
-          {
-            "name": "depositedAt",
-            "type": "u64"
-          },
-          {
-            "name": "autocompoundType",
-            "type": {
-              "defined": "AutocompoundType"
-            }
-          },
-          {
-            "name": "fbondTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "solAmount",
-            "type": "u64"
           },
           {
             "name": "collateralTokenMint",
             "type": "publicKey"
           },
           {
-            "name": "redeemedAt",
+            "name": "collateralTokenAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "collateralAmount",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fraktBond",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "fraktBondState",
+            "type": {
+              "defined": "FraktBondState"
+            }
+          },
+          {
+            "name": "bondTradeTransactionsCounter",
+            "type": "u8"
+          },
+          {
+            "name": "collateralBoxesQuantity",
+            "type": "u64"
+          },
+          {
+            "name": "returnTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "fraktMarket",
+            "type": "publicKey"
+          },
+          {
+            "name": "amountToReturn",
+            "type": "u64"
+          },
+          {
+            "name": "actualReturnedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "terminatedCounter",
+            "type": "u8"
+          },
+          {
+            "name": "fbondTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "fbondTokenSupply",
+            "type": "u64"
+          },
+          {
+            "name": "activatedAt",
+            "type": "u64"
+          },
+          {
+            "name": "liquidatingAt",
+            "type": "u64"
+          },
+          {
+            "name": "fbondIssuer",
+            "type": "publicKey"
+          },
+          {
+            "name": "bondCollateralOrSolReceiver",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "hadoMarketRegistry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "hadoMarket",
+            "type": "publicKey"
+          },
+          {
+            "name": "fraktMarket",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "hadoMarket",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "marketAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "marketState",
+            "type": {
+              "defined": "MarketState"
+            }
+          },
+          {
+            "name": "marketTrustType",
+            "type": {
+              "defined": "MarketTrustType"
+            }
+          },
+          {
+            "name": "pairValidationType",
+            "type": {
+              "defined": "PairValidationType"
+            }
+          },
+          {
+            "name": "validationAdapterProgram",
+            "type": "publicKey"
+          },
+          {
+            "name": "minBidCap",
+            "type": "u64"
+          },
+          {
+            "name": "minMarketFee",
+            "type": "u64"
+          },
+          {
+            "name": "pairTokenType",
+            "type": {
+              "defined": "PairTokenType"
+            }
+          },
+          {
+            "name": "pairTokenMint",
+            "type": "publicKey"
           }
         ]
       }
@@ -6309,579 +1982,29 @@ export type Bonds = {
           }
         ]
       }
-    },
-    {
-      "name": "bondsNftValidationAdapterRaw",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "scopeType",
-            "type": {
-              "defined": "ScopeType"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationWhitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationDurationType",
-            "type": {
-              "defined": "NftValidationDurationType"
-            }
-          },
-          {
-            "name": "validUntil",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "classicValidationWhitelist",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "whitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "root",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "collateralBox",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fbond",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralBoxType",
-            "type": {
-              "defined": "CollateralBoxType"
-            }
-          },
-          {
-            "name": "collateralTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralAmount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "flashLoanPool",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "borrowing",
-            "type": "bool"
-          },
-          {
-            "name": "balance",
-            "type": "u64"
-          },
-          {
-            "name": "loanFeePoints",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "fraktBond",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fraktBondState",
-            "type": {
-              "defined": "FraktBondState"
-            }
-          },
-          {
-            "name": "bondTradeTransactionsCounter",
-            "type": "u8"
-          },
-          {
-            "name": "collateralBoxesQuantity",
-            "type": "u64"
-          },
-          {
-            "name": "returnTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "fraktMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "amountToReturn",
-            "type": "u64"
-          },
-          {
-            "name": "actualReturnedAmount",
-            "type": "u64"
-          },
-          {
-            "name": "terminatedCounter",
-            "type": "u8"
-          },
-          {
-            "name": "fbondTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "fbondTokenSupply",
-            "type": "u64"
-          },
-          {
-            "name": "activatedAt",
-            "type": "u64"
-          },
-          {
-            "name": "liquidatingAt",
-            "type": "u64"
-          },
-          {
-            "name": "fbondIssuer",
-            "type": "publicKey"
-          },
-          {
-            "name": "bondCollateralOrSolReceiver",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "hadoMarketRegistry",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "fraktMarket",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "hadoMarket",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "marketAuthority",
-            "type": "publicKey"
-          },
-          {
-            "name": "marketState",
-            "type": {
-              "defined": "MarketState"
-            }
-          },
-          {
-            "name": "marketTrustType",
-            "type": {
-              "defined": "MarketTrustType"
-            }
-          },
-          {
-            "name": "pairValidationType",
-            "type": {
-              "defined": "PairValidationType"
-            }
-          },
-          {
-            "name": "validationAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "minBidCap",
-            "type": "u64"
-          },
-          {
-            "name": "minMarketFee",
-            "type": "u64"
-          },
-          {
-            "name": "pairTokenType",
-            "type": {
-              "defined": "PairTokenType"
-            }
-          },
-          {
-            "name": "pairTokenMint",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftPairBox",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftBoxType",
-            "type": {
-              "defined": "NftBoxType"
-            }
-          },
-          {
-            "name": "vaultTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "activeTokensAmount",
-            "type": "u64"
-          },
-          {
-            "name": "status",
-            "type": {
-              "defined": "NftBoxState"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftSwapPair",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "pairType",
-            "type": {
-              "defined": "PairType"
-            }
-          },
-          {
-            "name": "pairState",
-            "type": {
-              "defined": "PairState"
-            }
-          },
-          {
-            "name": "pairAuthorityType",
-            "type": {
-              "defined": "PairAuthorityType"
-            }
-          },
-          {
-            "name": "pairAuthorityAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "lpTokensMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "lpTokensInCirculation",
-            "type": "u64"
-          },
-          {
-            "name": "bondingCurve",
-            "type": {
-              "defined": "BondingCurve"
-            }
-          },
-          {
-            "name": "baseSpotPrice",
-            "type": "u64"
-          },
-          {
-            "name": "fee",
-            "type": "u64"
-          },
-          {
-            "name": "mathCounter",
-            "type": "i64"
-          },
-          {
-            "name": "currentSpotPrice",
-            "type": "u64"
-          },
-          {
-            "name": "bidCap",
-            "type": "u64"
-          },
-          {
-            "name": "bidSettlement",
-            "type": "i64"
-          },
-          {
-            "name": "edgeSettlement",
-            "type": "u64"
-          },
-          {
-            "name": "feeTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "feeVaultSeed",
-            "type": "u8"
-          },
-          {
-            "name": "solOrTokenFeeAmount",
-            "type": "u64"
-          },
-          {
-            "name": "fundsTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "fundsSolVaultSeed",
-            "type": "u8"
-          },
-          {
-            "name": "fundsSolOrTokenBalance",
-            "type": "u64"
-          },
-          {
-            "name": "initialFundsSolOrTokenBalance",
-            "type": "u64"
-          },
-          {
-            "name": "buyOrdersQuantity",
-            "type": "u64"
-          },
-          {
-            "name": "nftsSeed",
-            "type": "u8"
-          },
-          {
-            "name": "sellOrdersCount",
-            "type": "u64"
-          },
-          {
-            "name": "lastTransactedAt",
-            "type": "u64"
-          },
-          {
-            "name": "concentrationIndex",
-            "type": "u64"
-          },
-          {
-            "name": "assetReceiver",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftValidationAdapter",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "scopeType",
-            "type": {
-              "defined": "ScopeType"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationWhitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationDurationType",
-            "type": {
-              "defined": "NftValidationDurationType"
-            }
-          },
-          {
-            "name": "root",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "validUntil",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "protocolAdminMultisig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "protocolSettings",
-            "type": "publicKey"
-          },
-          {
-            "name": "admin",
-            "type": "publicKey"
-          },
-          {
-            "name": "weight",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "protocolSettingsV1",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "protocolFee",
-            "type": "u64"
-          },
-          {
-            "name": "protocolFeeMultiplier",
-            "type": "u64"
-          },
-          {
-            "name": "maxFee",
-            "type": "u64"
-          },
-          {
-            "name": "protocolFeeReceiver",
-            "type": "publicKey"
-          },
-          {
-            "name": "adminThresholdAmountMultisig",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "validation",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "user",
-            "type": "publicKey"
-          },
-          {
-            "name": "loanToValueFilter",
-            "type": "u64"
-          },
-          {
-            "name": "durationFilter",
-            "type": "u64"
-          },
-          {
-            "name": "maxReturnAmountFilter",
-            "type": "u64"
-          },
-          {
-            "name": "bondFeatures",
-            "type": {
-              "defined": "BondFeatures"
-            }
-          }
-        ]
-      }
     }
   ],
   "types": [
+    {
+      "name": "SellBondParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "minAmountToGet",
+            "type": "u64"
+          },
+          {
+            "name": "amountToSell",
+            "type": "u64"
+          },
+          {
+            "name": "bondTradeTransactionV2Bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "FBondParams",
       "type": {
@@ -6903,22 +2026,6 @@ export type Bonds = {
       "type": {
         "kind": "struct",
         "fields": []
-      }
-    },
-    {
-      "name": "InitializeHadoMarketParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "minBidCap",
-            "type": "u64"
-          },
-          {
-            "name": "minMarketFee",
-            "type": "u64"
-          }
-        ]
       }
     },
     {
@@ -6966,21 +2073,17 @@ export type Bonds = {
       }
     },
     {
-      "name": "SellBondParams",
+      "name": "InitializeHadoMarketParams",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "minAmountToGet",
+            "name": "minBidCap",
             "type": "u64"
           },
           {
-            "name": "amountToSell",
+            "name": "minMarketFee",
             "type": "u64"
-          },
-          {
-            "name": "bondTradeTransactionV2Bump",
-            "type": "u8"
           }
         ]
       }
@@ -7024,24 +2127,6 @@ export type Bonds = {
             "name": "bondingType",
             "type": {
               "defined": "BondOfferBondingCurveType"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondingCurve",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "delta",
-            "type": "u64"
-          },
-          {
-            "name": "bondingType",
-            "type": {
-              "defined": "BondingCurveType"
             }
           }
         ]
@@ -7116,168 +2201,6 @@ export type Bonds = {
                 ]
               }
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "AdapterType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Validation"
-          },
-          {
-            "name": "Authority"
-          },
-          {
-            "name": "Partial"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AuthorityAdapterType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "OneTime"
-          },
-          {
-            "name": "Persistent"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AuthorityState",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Active"
-          },
-          {
-            "name": "Used"
-          },
-          {
-            "name": "Expired"
-          },
-          {
-            "name": "Revoked"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AutocompoundDepositState",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "NotActive"
-          },
-          {
-            "name": "Active"
-          },
-          {
-            "name": "Removed"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AutocompoundType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "AutoreceiveSol"
-          },
-          {
-            "name": "AutocompoundAndReceiveNft"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondOfferBondingCurveType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Linear"
-          },
-          {
-            "name": "Exponential"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondTradeTransactionV2State",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "NotActive"
-          },
-          {
-            "name": "Active"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondTradeTransactionV2Type",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "ReceiveNftOnLiquidation"
-          },
-          {
-            "name": "AutoreceiveSol"
-          },
-          {
-            "name": "AutoCompoundAndReceiveNft"
-          },
-          {
-            "name": "AutoReceiveAndReceiveNft"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RedeemResult",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "AutoReceiveSol"
-          },
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "Nft"
-          },
-          {
-            "name": "ExitSol"
           }
         ]
       }
@@ -7376,46 +2299,27 @@ export type Bonds = {
       }
     },
     {
-      "name": "NftBoxState",
+      "name": "BondFeatures",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "NotActive"
+            "name": "None"
           },
           {
-            "name": "Active"
-          }
-        ]
-      }
-    },
-    {
-      "name": "NftBoxType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Escrow"
+            "name": "Autocompound"
           },
           {
-            "name": "Escrowless"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PairType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "TokenForNft"
+            "name": "ReceiveNftOnLiquidation"
           },
           {
-            "name": "NftForToken"
+            "name": "AutoreceiveSol"
           },
           {
-            "name": "LiquidityProvision"
+            "name": "AutoCompoundAndReceiveNft"
+          },
+          {
+            "name": "AutoReceiveAndReceiveNft"
           }
         ]
       }
@@ -7444,35 +2348,7 @@ export type Bonds = {
       }
     },
     {
-      "name": "PairAuthorityType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "ClassicAuthority"
-          },
-          {
-            "name": "CustomAuthority"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PartialSettings",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "CustomPartial"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondingCurveType",
+      "name": "BondOfferBondingCurveType",
       "type": {
         "kind": "enum",
         "variants": [
@@ -7486,52 +2362,21 @@ export type Bonds = {
       }
     },
     {
-      "name": "ScopeType",
+      "name": "BondTradeTransactionV2State",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "Market"
+            "name": "NotActive"
           },
           {
-            "name": "Pair"
+            "name": "Active"
           }
         ]
       }
     },
     {
-      "name": "NftValidationDurationType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Finite"
-          },
-          {
-            "name": "Infinite"
-          }
-        ]
-      }
-    },
-    {
-      "name": "NftValidationWhitelistType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Creator"
-          },
-          {
-            "name": "Nft"
-          },
-          {
-            "name": "MerkleTree"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondFeatures",
+      "name": "BondTradeTransactionV2Type",
       "type": {
         "kind": "enum",
         "variants": [
@@ -7552,6 +2397,29 @@ export type Bonds = {
           },
           {
             "name": "AutoReceiveAndReceiveNft"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RedeemResult",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "AutoReceiveSol"
+          },
+          {
+            "name": "Autocompound"
+          },
+          {
+            "name": "Nft"
+          },
+          {
+            "name": "ExitSol"
           }
         ]
       }
@@ -8508,6 +3376,41 @@ export type Bonds = {
       "code": 6182,
       "name": "SumOfBondsInRepayDoesntMatchBondsSupply",
       "msg": "SumOfBondsInRepayDoesntMatchBondsSupply"
+    },
+    {
+      "code": 6183,
+      "name": "CantBuyoutForLowerThanMinimumPrice",
+      "msg": "CantBuyoutForLowerThanMinimumPrice"
+    },
+    {
+      "code": 6184,
+      "name": "CantBuyoutNftOnDutchAuctionWhenThereAreOnlyOneLender",
+      "msg": "CantBuyoutNftOnDutchAuctionWhenThereAreOnlyOneLender"
+    },
+    {
+      "code": 6185,
+      "name": "ThereAreMoreThanOneLenderOfThisBond",
+      "msg": "ThereAreMoreThanOneLenderOfThisBond"
+    },
+    {
+      "code": 6186,
+      "name": "TradeTransactionDoesntMatchBond",
+      "msg": "TradeTransactionDoesntMatchBond"
+    },
+    {
+      "code": 6187,
+      "name": "CantLiquidatePerpetualBonds",
+      "msg": "CantLiquidatePerpetualBonds"
+    },
+    {
+      "code": 6188,
+      "name": "CantRepayExpiredReceivingCollateralLoan",
+      "msg": "CantRepayExpiredReceivingCollateralLoan"
+    },
+    {
+      "code": 6189,
+      "name": "DisabledPairsWithMoreThanOneOrder",
+      "msg": "DisabledPairsWithMoreThanOneOrder"
     }
   ]
 };
@@ -8517,1506 +3420,6 @@ export const IDL: Bonds = {
   "name": "bonds",
   "instructions": [
     {
-      "name": "initializeFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        }
-      ]
-    },
-    {
-      "name": "addCollateralBox",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "activateFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "repayFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemFbonds",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "getRepaidCollateralPnft",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "getRepaidCollateral",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "liquidateFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "rescueLostEscrowlessCollateral",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositReturnedSolToLiquidatingBond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "extractCollateralToLiquidatePnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "liquidateReceivingNftFbondPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "extractCollateralToLiquidate",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondCollateralOrSolReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "updateActualReturnedAmount",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newAmountToReturn",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setBondCollateralOrSolReceiver",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "unsetBondCollateralOrSolReceiver",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "createBondWithSingleCollateralPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "createBondWithSingleCollateral",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "createValidation",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        },
-        {
-          "name": "bondFeatures",
-          "type": {
-            "defined": "BondFeatures"
-          }
-        }
-      ]
-    },
-    {
-      "name": "updateValidation",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        }
-      ]
-    },
-    {
       "name": "boundHadoMarketToFraktMarket",
       "accounts": [
         {
@@ -10051,136 +3454,6 @@ export const IDL: Bonds = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "initializePair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        }
-      ]
     },
     {
       "name": "createBondOfferV2",
@@ -10253,176 +3526,6 @@ export const IDL: Bonds = {
       ]
     },
     {
-      "name": "migratePairToBondOfferV2",
-      "accounts": [
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bondOfferRandomSeed",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "setBondFraktMarket",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "migrateAutocompoundToBondTradeTransaction",
-      "accounts": [
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK optional validation"
-          ]
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK mutual_bond_trade_txn_vault"
-          ]
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bondOfferRandomSeed",
-          "type": "u64"
-        }
-      ]
-    },
-    {
       "name": "updateBondOfferV2",
       "accounts": [
         {
@@ -10463,81 +3566,6 @@ export const IDL: Bonds = {
         },
         {
           "name": "maxReturnAmountFilter",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "createClassicAuthorityAdapter",
-      "accounts": [
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositSolToPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountOfTokensToBuy",
           "type": "u64"
         }
       ]
@@ -10600,128 +3628,6 @@ export const IDL: Bonds = {
       "args": [
         {
           "name": "amountOfTokensToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "validateNft",
-      "accounts": [
-        {
-          "name": "nftValidationAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validationWhitelist",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "depositNftToPair",
-      "accounts": [
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
           "type": "u64"
         }
       ]
@@ -10802,877 +3708,6 @@ export const IDL: Bonds = {
       "args": []
     },
     {
-      "name": "addClassicWhitelistToMarket",
-      "accounts": [
-        {
-          "name": "validationWhitelist",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistedAddress",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "whitelistType",
-          "type": {
-            "defined": "NftValidationWhitelistType"
-          }
-        }
-      ]
-    },
-    {
-      "name": "depositLiquidityToPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "putPairOnMarket",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "buyNftFromPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "maxAmountToPay",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToBuy",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "sellNftToLiquidityPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftValidationAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newVaultTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSolFromPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountOfTokensToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawNftFromPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromBalancedPair",
-      "accounts": [
-        {
-          "name": "nftPairBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "modifyPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromBuyOrdersPair",
-      "accounts": [
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityFromSellOrdersPair",
-      "accounts": [
-        {
-          "name": "nftPairBoxFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMintFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccountFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccountFirst",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftPairBoxSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftMintSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultNftTokenAccountSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccountSecond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawLiquidityOrderVirtualFees",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "makeLiquidityPairTokenized",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "closeVirtualNftSwapPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
       "name": "removeBondOfferV2",
       "accounts": [
         {
@@ -11697,339 +3732,6 @@ export const IDL: Bonds = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "customValidateNft",
-      "accounts": [
-        {
-          "name": "nftValidationAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK might be empty"
-          ]
-        },
-        {
-          "name": "whitelistedAddress",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "adapterProgramSigner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "duration",
-          "type": "u64"
-        },
-        {
-          "name": "nftValidationWhitelistType",
-          "type": {
-            "defined": "NftValidationWhitelistType"
-          }
-        },
-        {
-          "name": "scopeType",
-          "type": {
-            "defined": "ScopeType"
-          }
-        }
-      ]
-    },
-    {
-      "name": "validateAndSellNftToTokenToNftPair",
-      "accounts": [
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "proof",
-          "type": {
-            "vec": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "validateAndSellToBondOffersV2",
-      "accounts": [
-        {
-          "name": "collateralBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "nftUserTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "sellBondParams",
-          "type": {
-            "vec": {
-              "defined": "SellBondParams"
-            }
-          }
-        }
-      ]
     },
     {
       "name": "repayFbondToTradeTransactions",
@@ -12125,6 +3827,14 @@ export const IDL: Bonds = {
           "isSigner": false
         },
         {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -12132,6 +3842,11 @@ export const IDL: Bonds = {
         {
           "name": "rent",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "userFbondTokenAccount",
+          "isMut": true,
           "isSigner": false
         }
       ],
@@ -12232,1958 +3947,6 @@ export const IDL: Bonds = {
       ]
     },
     {
-      "name": "initializeAndDepositTokenForNftPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        },
-        {
-          "name": "amountOfTokensToBuy",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "initializeDepositAndCreateValidationTokenForNftPair",
-      "accounts": [
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "hadoMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "pairAuthorityAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom authority adapter"
-          ]
-        },
-        {
-          "name": "partialAdapterProgram",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial adapter"
-          ]
-        },
-        {
-          "name": "partialAssetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Custom partial asset receiver"
-          ]
-        },
-        {
-          "name": "feeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "feeTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Fee token account"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Funds token account"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol fee"
-          ]
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK Asset Receiver"
-          ]
-        },
-        {
-          "name": "nftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorityAdapter",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "validation",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "PairBumps"
-          }
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "PairParams"
-          }
-        },
-        {
-          "name": "bondingCurveType",
-          "type": {
-            "defined": "BondingCurveType"
-          }
-        },
-        {
-          "name": "pairType",
-          "type": {
-            "defined": "PairType"
-          }
-        },
-        {
-          "name": "amountOfTokensToBuy",
-          "type": "u64"
-        },
-        {
-          "name": "loanToValueFilter",
-          "type": "u64"
-        },
-        {
-          "name": "durationFilter",
-          "type": "u64"
-        },
-        {
-          "name": "maxReturnAmountFilter",
-          "type": "u64"
-        },
-        {
-          "name": "bondFeatures",
-          "type": {
-            "defined": "BondFeatures"
-          }
-        }
-      ]
-    },
-    {
-      "name": "initializeFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "loanFeePoints",
-          "type": "u16"
-        }
-      ]
-    },
-    {
-      "name": "depositSolToFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToDeposit",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "withdrawSolFromFlashLoanPool",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToWithdraw",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "takeFlashLoan",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK : instructions"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToBorrow",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "repayFlashLoan",
-      "accounts": [
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK : instructions"
-          ]
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "solAmountToRepay",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "mortgageBuyNftSellBondToTokenForNftPair",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "crossMintAmmPairFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pool",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "poolFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapNftPairBox",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairFundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapPairNftsOwner",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairFeeSolVault",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairVaultNftTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapPairAssetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "hadeswapProtocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadeswapProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "bumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "amountToDeposit",
-          "type": "u64"
-        },
-        {
-          "name": "params",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "proof",
-          "type": {
-            "vec": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "skipFailed",
-          "type": "bool"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        },
-        {
-          "name": "maxAmountToPay",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "redeemFbondsFromAutocompoundToPair",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "CHECK asset_receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAutoreceive",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAutocompound",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemBondTradeTransactionAndReceiveNft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTransactionV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondTradeTxnTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mutualBondTradeTxnVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "redeemFbondsFromAutocompoundToUser",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemFbondsAutoreceiveSol",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : asset receiver"
-          ]
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "redeemAutocompoundAndAutoreceiveLiquidatedNft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "tokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userMiddleTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "middleTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "claimFbondsFromAutocompoundDeposit",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userBondsTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "amountToClaim",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "refinanceFbond",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "newBondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userNewFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newFbondBumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "newFbondParams",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "refinanceFbondPnft",
-      "accounts": [
-        {
-          "name": "fbond",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "fbondTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : admin address"
-          ]
-        },
-        {
-          "name": "bondCollateralOrSolReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK : all supply burner address. Random address if fbond.bond_collateral_or_sol_receiver == EMPTY_ADDRESS"
-          ]
-        },
-        {
-          "name": "collateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenMint",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "collateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbond",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "newBondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newFbondTokenMint",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "userNewFbondTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "newCollateralBox",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "userTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "validation",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "autocompoundDeposit",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "pair",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "hadoRegistry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "fraktMarket",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "oracleFloor",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "whitelistEntry",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "assetReceiver",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "fundsSolVault",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK vault for sol"
-          ]
-        },
-        {
-          "name": "protocolFeeReceiver",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "metadataProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "metadataInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "editionInfo",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nftMetadata",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "ownerTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "destTokenRecord",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "instructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "authorizationRulesProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "newFbondBumps",
-          "type": {
-            "defined": "FBondBumps"
-          }
-        },
-        {
-          "name": "newFbondParams",
-          "type": {
-            "defined": "FBondParams"
-          }
-        },
-        {
-          "name": "minAmountToGet",
-          "type": "u64"
-        },
-        {
-          "name": "amountToSell",
-          "type": "u64"
-        },
-        {
-          "name": "authorizationData",
-          "type": {
-            "option": {
-              "defined": "AuthorizationDataLocal"
-            }
-          }
-        }
-      ]
-    },
-    {
       "name": "refinanceToBondOffersV2",
       "accounts": [
         {
@@ -14198,11 +3961,6 @@ export const IDL: Bonds = {
         },
         {
           "name": "bondProgramAuthority",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "returnFundsOwner",
           "isMut": true,
           "isSigner": false
         },
@@ -14575,111 +4333,929 @@ export const IDL: Bonds = {
           }
         }
       ]
+    },
+    {
+      "name": "liquidateBondOnAuction",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "returnFundsOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "liquidateBondOnAuctionPnft",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "middleTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthorityTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "returnFundsOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK : admin address"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "claimNftByLender",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondTradeTxnTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "bondTradeTransactionV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "claimNftByLenderPnft",
+      "accounts": [
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondTradeTxnTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "middleTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthorityTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "bondTradeTransactionV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralOwner",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "createBondAndSellToOffersForTest",
+      "accounts": [
+        {
+          "name": "fbond",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "bondProgramAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "fbondTokenMint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "collateralBox",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "collateralTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "hadoRegistry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "fraktMarket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oracleFloor",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "whitelistEntry",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "assetReceiverOrAutocompoundDepositTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mutualBondTradeTxnVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK vault for sol"
+          ]
+        },
+        {
+          "name": "protocolFeeReceiver",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "editionInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ownerTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destTokenRecord",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "instructions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authorizationRulesProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bumps",
+          "type": {
+            "defined": "FBondBumps"
+          }
+        },
+        {
+          "name": "amountToDeposit",
+          "type": "u64"
+        },
+        {
+          "name": "params",
+          "type": {
+            "defined": "FBondParams"
+          }
+        },
+        {
+          "name": "authorizationData",
+          "type": {
+            "option": {
+              "defined": "AuthorizationDataLocal"
+            }
+          }
+        },
+        {
+          "name": "sellBondParams",
+          "type": {
+            "vec": {
+              "defined": "SellBondParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "patchBondOffer",
+      "accounts": [
+        {
+          "name": "bondOfferV2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
     {
-      "name": "adapterWhitelist",
+      "name": "collateralBox",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "whitelistedAdapterProgram",
+            "name": "fbond",
             "type": "publicKey"
           },
           {
-            "name": "adapterType",
+            "name": "collateralBoxType",
             "type": {
-              "defined": "AdapterType"
+              "defined": "CollateralBoxType"
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "authorityAdapter",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityOwner",
-            "type": "publicKey"
-          },
-          {
-            "name": "authorityType",
-            "type": {
-              "defined": "AuthorityAdapterType"
-            }
-          },
-          {
-            "name": "expiringAt",
-            "type": "u64"
-          },
-          {
-            "name": "authorityState",
-            "type": {
-              "defined": "AuthorityState"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "autocompoundDeposit",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fraktBondState",
-            "type": {
-              "defined": "AutocompoundDepositState"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "user",
-            "type": "publicKey"
-          },
-          {
-            "name": "amountOfBonds",
-            "type": "u64"
-          },
-          {
-            "name": "depositedAt",
-            "type": "u64"
-          },
-          {
-            "name": "autocompoundType",
-            "type": {
-              "defined": "AutocompoundType"
-            }
-          },
-          {
-            "name": "fbondTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "solAmount",
-            "type": "u64"
           },
           {
             "name": "collateralTokenMint",
             "type": "publicKey"
           },
           {
-            "name": "redeemedAt",
+            "name": "collateralTokenAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "collateralAmount",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "fraktBond",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "fraktBondState",
+            "type": {
+              "defined": "FraktBondState"
+            }
+          },
+          {
+            "name": "bondTradeTransactionsCounter",
+            "type": "u8"
+          },
+          {
+            "name": "collateralBoxesQuantity",
+            "type": "u64"
+          },
+          {
+            "name": "returnTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "fraktMarket",
+            "type": "publicKey"
+          },
+          {
+            "name": "amountToReturn",
+            "type": "u64"
+          },
+          {
+            "name": "actualReturnedAmount",
+            "type": "u64"
+          },
+          {
+            "name": "terminatedCounter",
+            "type": "u8"
+          },
+          {
+            "name": "fbondTokenMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "fbondTokenSupply",
+            "type": "u64"
+          },
+          {
+            "name": "activatedAt",
+            "type": "u64"
+          },
+          {
+            "name": "liquidatingAt",
+            "type": "u64"
+          },
+          {
+            "name": "fbondIssuer",
+            "type": "publicKey"
+          },
+          {
+            "name": "bondCollateralOrSolReceiver",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "hadoMarketRegistry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "hadoMarket",
+            "type": "publicKey"
+          },
+          {
+            "name": "fraktMarket",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "hadoMarket",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "marketAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "marketState",
+            "type": {
+              "defined": "MarketState"
+            }
+          },
+          {
+            "name": "marketTrustType",
+            "type": {
+              "defined": "MarketTrustType"
+            }
+          },
+          {
+            "name": "pairValidationType",
+            "type": {
+              "defined": "PairValidationType"
+            }
+          },
+          {
+            "name": "validationAdapterProgram",
+            "type": "publicKey"
+          },
+          {
+            "name": "minBidCap",
+            "type": "u64"
+          },
+          {
+            "name": "minMarketFee",
+            "type": "u64"
+          },
+          {
+            "name": "pairTokenType",
+            "type": {
+              "defined": "PairTokenType"
+            }
+          },
+          {
+            "name": "pairTokenMint",
+            "type": "publicKey"
           }
         ]
       }
@@ -14823,579 +5399,29 @@ export const IDL: Bonds = {
           }
         ]
       }
-    },
-    {
-      "name": "bondsNftValidationAdapterRaw",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "scopeType",
-            "type": {
-              "defined": "ScopeType"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationWhitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationDurationType",
-            "type": {
-              "defined": "NftValidationDurationType"
-            }
-          },
-          {
-            "name": "validUntil",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "classicValidationWhitelist",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "whitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "root",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "collateralBox",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fbond",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralBoxType",
-            "type": {
-              "defined": "CollateralBoxType"
-            }
-          },
-          {
-            "name": "collateralTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "collateralAmount",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "flashLoanPool",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "borrowing",
-            "type": "bool"
-          },
-          {
-            "name": "balance",
-            "type": "u64"
-          },
-          {
-            "name": "loanFeePoints",
-            "type": "u16"
-          }
-        ]
-      }
-    },
-    {
-      "name": "fraktBond",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "fraktBondState",
-            "type": {
-              "defined": "FraktBondState"
-            }
-          },
-          {
-            "name": "bondTradeTransactionsCounter",
-            "type": "u8"
-          },
-          {
-            "name": "collateralBoxesQuantity",
-            "type": "u64"
-          },
-          {
-            "name": "returnTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "fraktMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "amountToReturn",
-            "type": "u64"
-          },
-          {
-            "name": "actualReturnedAmount",
-            "type": "u64"
-          },
-          {
-            "name": "terminatedCounter",
-            "type": "u8"
-          },
-          {
-            "name": "fbondTokenMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "fbondTokenSupply",
-            "type": "u64"
-          },
-          {
-            "name": "activatedAt",
-            "type": "u64"
-          },
-          {
-            "name": "liquidatingAt",
-            "type": "u64"
-          },
-          {
-            "name": "fbondIssuer",
-            "type": "publicKey"
-          },
-          {
-            "name": "bondCollateralOrSolReceiver",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "hadoMarketRegistry",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "fraktMarket",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "hadoMarket",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "marketAuthority",
-            "type": "publicKey"
-          },
-          {
-            "name": "marketState",
-            "type": {
-              "defined": "MarketState"
-            }
-          },
-          {
-            "name": "marketTrustType",
-            "type": {
-              "defined": "MarketTrustType"
-            }
-          },
-          {
-            "name": "pairValidationType",
-            "type": {
-              "defined": "PairValidationType"
-            }
-          },
-          {
-            "name": "validationAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "minBidCap",
-            "type": "u64"
-          },
-          {
-            "name": "minMarketFee",
-            "type": "u64"
-          },
-          {
-            "name": "pairTokenType",
-            "type": {
-              "defined": "PairTokenType"
-            }
-          },
-          {
-            "name": "pairTokenMint",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftPairBox",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftBoxType",
-            "type": {
-              "defined": "NftBoxType"
-            }
-          },
-          {
-            "name": "vaultTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "activeTokensAmount",
-            "type": "u64"
-          },
-          {
-            "name": "status",
-            "type": {
-              "defined": "NftBoxState"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftSwapPair",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "pairType",
-            "type": {
-              "defined": "PairType"
-            }
-          },
-          {
-            "name": "pairState",
-            "type": {
-              "defined": "PairState"
-            }
-          },
-          {
-            "name": "pairAuthorityType",
-            "type": {
-              "defined": "PairAuthorityType"
-            }
-          },
-          {
-            "name": "pairAuthorityAdapterProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "lpTokensMint",
-            "type": "publicKey"
-          },
-          {
-            "name": "lpTokensInCirculation",
-            "type": "u64"
-          },
-          {
-            "name": "bondingCurve",
-            "type": {
-              "defined": "BondingCurve"
-            }
-          },
-          {
-            "name": "baseSpotPrice",
-            "type": "u64"
-          },
-          {
-            "name": "fee",
-            "type": "u64"
-          },
-          {
-            "name": "mathCounter",
-            "type": "i64"
-          },
-          {
-            "name": "currentSpotPrice",
-            "type": "u64"
-          },
-          {
-            "name": "bidCap",
-            "type": "u64"
-          },
-          {
-            "name": "bidSettlement",
-            "type": "i64"
-          },
-          {
-            "name": "edgeSettlement",
-            "type": "u64"
-          },
-          {
-            "name": "feeTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "feeVaultSeed",
-            "type": "u8"
-          },
-          {
-            "name": "solOrTokenFeeAmount",
-            "type": "u64"
-          },
-          {
-            "name": "fundsTokenAccount",
-            "type": "publicKey"
-          },
-          {
-            "name": "fundsSolVaultSeed",
-            "type": "u8"
-          },
-          {
-            "name": "fundsSolOrTokenBalance",
-            "type": "u64"
-          },
-          {
-            "name": "initialFundsSolOrTokenBalance",
-            "type": "u64"
-          },
-          {
-            "name": "buyOrdersQuantity",
-            "type": "u64"
-          },
-          {
-            "name": "nftsSeed",
-            "type": "u8"
-          },
-          {
-            "name": "sellOrdersCount",
-            "type": "u64"
-          },
-          {
-            "name": "lastTransactedAt",
-            "type": "u64"
-          },
-          {
-            "name": "concentrationIndex",
-            "type": "u64"
-          },
-          {
-            "name": "assetReceiver",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "nftValidationAdapter",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "hadoMarket",
-            "type": "publicKey"
-          },
-          {
-            "name": "scopeType",
-            "type": {
-              "defined": "ScopeType"
-            }
-          },
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationProgram",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationWhitelistType",
-            "type": {
-              "defined": "NftValidationWhitelistType"
-            }
-          },
-          {
-            "name": "whitelistedAddress",
-            "type": "publicKey"
-          },
-          {
-            "name": "nftValidationDurationType",
-            "type": {
-              "defined": "NftValidationDurationType"
-            }
-          },
-          {
-            "name": "root",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "validUntil",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "protocolAdminMultisig",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "protocolSettings",
-            "type": "publicKey"
-          },
-          {
-            "name": "admin",
-            "type": "publicKey"
-          },
-          {
-            "name": "weight",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "protocolSettingsV1",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "protocolFee",
-            "type": "u64"
-          },
-          {
-            "name": "protocolFeeMultiplier",
-            "type": "u64"
-          },
-          {
-            "name": "maxFee",
-            "type": "u64"
-          },
-          {
-            "name": "protocolFeeReceiver",
-            "type": "publicKey"
-          },
-          {
-            "name": "adminThresholdAmountMultisig",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "validation",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "pair",
-            "type": "publicKey"
-          },
-          {
-            "name": "user",
-            "type": "publicKey"
-          },
-          {
-            "name": "loanToValueFilter",
-            "type": "u64"
-          },
-          {
-            "name": "durationFilter",
-            "type": "u64"
-          },
-          {
-            "name": "maxReturnAmountFilter",
-            "type": "u64"
-          },
-          {
-            "name": "bondFeatures",
-            "type": {
-              "defined": "BondFeatures"
-            }
-          }
-        ]
-      }
     }
   ],
   "types": [
+    {
+      "name": "SellBondParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "minAmountToGet",
+            "type": "u64"
+          },
+          {
+            "name": "amountToSell",
+            "type": "u64"
+          },
+          {
+            "name": "bondTradeTransactionV2Bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "FBondParams",
       "type": {
@@ -15417,22 +5443,6 @@ export const IDL: Bonds = {
       "type": {
         "kind": "struct",
         "fields": []
-      }
-    },
-    {
-      "name": "InitializeHadoMarketParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "minBidCap",
-            "type": "u64"
-          },
-          {
-            "name": "minMarketFee",
-            "type": "u64"
-          }
-        ]
       }
     },
     {
@@ -15480,21 +5490,17 @@ export const IDL: Bonds = {
       }
     },
     {
-      "name": "SellBondParams",
+      "name": "InitializeHadoMarketParams",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "minAmountToGet",
+            "name": "minBidCap",
             "type": "u64"
           },
           {
-            "name": "amountToSell",
+            "name": "minMarketFee",
             "type": "u64"
-          },
-          {
-            "name": "bondTradeTransactionV2Bump",
-            "type": "u8"
           }
         ]
       }
@@ -15538,24 +5544,6 @@ export const IDL: Bonds = {
             "name": "bondingType",
             "type": {
               "defined": "BondOfferBondingCurveType"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondingCurve",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "delta",
-            "type": "u64"
-          },
-          {
-            "name": "bondingType",
-            "type": {
-              "defined": "BondingCurveType"
             }
           }
         ]
@@ -15630,168 +5618,6 @@ export const IDL: Bonds = {
                 ]
               }
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "AdapterType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Validation"
-          },
-          {
-            "name": "Authority"
-          },
-          {
-            "name": "Partial"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AuthorityAdapterType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "OneTime"
-          },
-          {
-            "name": "Persistent"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AuthorityState",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Active"
-          },
-          {
-            "name": "Used"
-          },
-          {
-            "name": "Expired"
-          },
-          {
-            "name": "Revoked"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AutocompoundDepositState",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "NotActive"
-          },
-          {
-            "name": "Active"
-          },
-          {
-            "name": "Removed"
-          }
-        ]
-      }
-    },
-    {
-      "name": "AutocompoundType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "AutoreceiveSol"
-          },
-          {
-            "name": "AutocompoundAndReceiveNft"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondOfferBondingCurveType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Linear"
-          },
-          {
-            "name": "Exponential"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondTradeTransactionV2State",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "NotActive"
-          },
-          {
-            "name": "Active"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondTradeTransactionV2Type",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "ReceiveNftOnLiquidation"
-          },
-          {
-            "name": "AutoreceiveSol"
-          },
-          {
-            "name": "AutoCompoundAndReceiveNft"
-          },
-          {
-            "name": "AutoReceiveAndReceiveNft"
-          }
-        ]
-      }
-    },
-    {
-      "name": "RedeemResult",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "AutoReceiveSol"
-          },
-          {
-            "name": "Autocompound"
-          },
-          {
-            "name": "Nft"
-          },
-          {
-            "name": "ExitSol"
           }
         ]
       }
@@ -15890,46 +5716,27 @@ export const IDL: Bonds = {
       }
     },
     {
-      "name": "NftBoxState",
+      "name": "BondFeatures",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "NotActive"
+            "name": "None"
           },
           {
-            "name": "Active"
-          }
-        ]
-      }
-    },
-    {
-      "name": "NftBoxType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Escrow"
+            "name": "Autocompound"
           },
           {
-            "name": "Escrowless"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PairType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "TokenForNft"
+            "name": "ReceiveNftOnLiquidation"
           },
           {
-            "name": "NftForToken"
+            "name": "AutoreceiveSol"
           },
           {
-            "name": "LiquidityProvision"
+            "name": "AutoCompoundAndReceiveNft"
+          },
+          {
+            "name": "AutoReceiveAndReceiveNft"
           }
         ]
       }
@@ -15958,35 +5765,7 @@ export const IDL: Bonds = {
       }
     },
     {
-      "name": "PairAuthorityType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "ClassicAuthority"
-          },
-          {
-            "name": "CustomAuthority"
-          }
-        ]
-      }
-    },
-    {
-      "name": "PartialSettings",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "None"
-          },
-          {
-            "name": "CustomPartial"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondingCurveType",
+      "name": "BondOfferBondingCurveType",
       "type": {
         "kind": "enum",
         "variants": [
@@ -16000,52 +5779,21 @@ export const IDL: Bonds = {
       }
     },
     {
-      "name": "ScopeType",
+      "name": "BondTradeTransactionV2State",
       "type": {
         "kind": "enum",
         "variants": [
           {
-            "name": "Market"
+            "name": "NotActive"
           },
           {
-            "name": "Pair"
+            "name": "Active"
           }
         ]
       }
     },
     {
-      "name": "NftValidationDurationType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Finite"
-          },
-          {
-            "name": "Infinite"
-          }
-        ]
-      }
-    },
-    {
-      "name": "NftValidationWhitelistType",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "Creator"
-          },
-          {
-            "name": "Nft"
-          },
-          {
-            "name": "MerkleTree"
-          }
-        ]
-      }
-    },
-    {
-      "name": "BondFeatures",
+      "name": "BondTradeTransactionV2Type",
       "type": {
         "kind": "enum",
         "variants": [
@@ -16066,6 +5814,29 @@ export const IDL: Bonds = {
           },
           {
             "name": "AutoReceiveAndReceiveNft"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RedeemResult",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "AutoReceiveSol"
+          },
+          {
+            "name": "Autocompound"
+          },
+          {
+            "name": "Nft"
+          },
+          {
+            "name": "ExitSol"
           }
         ]
       }
@@ -17022,6 +6793,41 @@ export const IDL: Bonds = {
       "code": 6182,
       "name": "SumOfBondsInRepayDoesntMatchBondsSupply",
       "msg": "SumOfBondsInRepayDoesntMatchBondsSupply"
+    },
+    {
+      "code": 6183,
+      "name": "CantBuyoutForLowerThanMinimumPrice",
+      "msg": "CantBuyoutForLowerThanMinimumPrice"
+    },
+    {
+      "code": 6184,
+      "name": "CantBuyoutNftOnDutchAuctionWhenThereAreOnlyOneLender",
+      "msg": "CantBuyoutNftOnDutchAuctionWhenThereAreOnlyOneLender"
+    },
+    {
+      "code": 6185,
+      "name": "ThereAreMoreThanOneLenderOfThisBond",
+      "msg": "ThereAreMoreThanOneLenderOfThisBond"
+    },
+    {
+      "code": 6186,
+      "name": "TradeTransactionDoesntMatchBond",
+      "msg": "TradeTransactionDoesntMatchBond"
+    },
+    {
+      "code": 6187,
+      "name": "CantLiquidatePerpetualBonds",
+      "msg": "CantLiquidatePerpetualBonds"
+    },
+    {
+      "code": 6188,
+      "name": "CantRepayExpiredReceivingCollateralLoan",
+      "msg": "CantRepayExpiredReceivingCollateralLoan"
+    },
+    {
+      "code": 6189,
+      "name": "DisabledPairsWithMoreThanOneOrder",
+      "msg": "DisabledPairsWithMoreThanOneOrder"
     }
   ]
 };

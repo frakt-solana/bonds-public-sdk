@@ -7,7 +7,6 @@ import {
   HadoMarketRegistry,
   Validation,
   AuthorityAdapter,
-  ClassicValidationWhitelist,
   HadoMarket,
   NftPairBox,
   NftSwapPair,

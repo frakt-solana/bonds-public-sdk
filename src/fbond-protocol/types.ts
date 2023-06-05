@@ -19,6 +19,40 @@ export interface FraktBond {
   publicKey: string;
 }
 
+export interface BondCartOrder {
+  orderSize: number; //? lamports
+  spotPrice: number; //? lamports
+  pairPubkey: string;
+  assetReceiver: string;
+  durationFilter: number;
+  bondFeature: BondFeatures;
+}
+
+export interface InstructionsAndSigners {
+  instructions: TransactionInstruction[];
+  signers?: Signer[];
+  lookupTablePublicKeys: {
+    tablePubkey: PublicKey;
+    addresses: PublicKey[];
+  }[];
+}
+
+export interface TxnsAndSigners {
+  transaction: Transaction;
+  signers?: Signer[];
+}
+
+export interface SignAndSendAllTransactionsProps {
+  transactionsAndSigners: TxnsAndSigners[];
+  connection: Connection;
+  wallet: any;
+  commitment?: Commitment;
+  onBeforeApprove?: () => void;
+  onAfterSend?: () => void;
+  onSuccess?: () => void;
+  onError?: (error: any) => void;
+}
+
 export enum FraktBondState {
   Initialized = 'initialized',
   Active = 'active',
@@ -124,16 +158,6 @@ export enum PairValidationType {
 export enum PairTokenType {
   NativeSol = 'nativeSol',
   Spl = 'spl',
-}
-
-export interface ClassicValidationWhitelist {
-  hadoMarket: string;
-  pair: string;
-  whitelistType: WhitelistType;
-  whitelistedAddress: string;
-  root: Buffer;
-
-  publicKey: string;
 }
 
 export enum WhitelistType {
@@ -328,40 +352,6 @@ export interface AutocompoundDeposit {
   publicKey: string;
 }
 
-export interface BondCartOrder {
-  orderSize: number; //? lamports
-  spotPrice: number; //? lamports
-  pairPubkey: string;
-  assetReceiver: string;
-  durationFilter: number;
-  bondFeature: BondFeatures;
-}
-
-export interface InstructionsAndSigners {
-  instructions: TransactionInstruction[];
-  signers?: Signer[];
-  lookupTablePublicKeys: {
-    tablePubkey: PublicKey;
-    addresses: PublicKey[];
-  }[];
-}
-
-interface TxnsAndSigners {
-  transaction: Transaction;
-  signers?: Signer[];
-}
-
-interface SignAndSendAllTransactionsProps {
-  transactionsAndSigners: TxnsAndSigners[];
-  connection: Connection;
-  wallet: any;
-  commitment?: Commitment;
-  onBeforeApprove?: () => void;
-  onAfterSend?: () => void;
-  onSuccess?: () => void;
-  onError?: (error: any) => void;
-}
-
 export enum AutocompoundDepositState {
   NotActive = 'notActive',
   Active = 'active',
@@ -389,4 +379,5 @@ export enum BondEventType {
   Liquidating = 'liquidating',
   Liquidated = 'liquidated',
   Redeem = 'redeem',
+  Refinance = 'refinance',
 }

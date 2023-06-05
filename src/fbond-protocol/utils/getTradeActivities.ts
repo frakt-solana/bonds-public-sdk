@@ -168,16 +168,11 @@ const parseTransactionInfoToTradeActivities = async ({
 };
 
 const isTradeInstructionLog = (log: string) =>
-  log === TradeInstruction.BuyNftFromPair ||
-  log === TradeInstruction.SellNftToTokenToNftPair ||
-  log === TradeInstruction.SellNftToLiquidityPair ||
-  log === TradeInstruction.ValidateAndSellNftToTokenToNftPair;
+  log === TradeInstruction.BuyNftFromPair || log === TradeInstruction.SellNftToTokenToNftPair;
 
 const isBondInstructionLog = (log: string) =>
   log === TradeInstruction.BuyNftFromPair ||
   log === TradeInstruction.SellNftToTokenToNftPair ||
-  log === TradeInstruction.SellNftToLiquidityPair ||
-  log === TradeInstruction.ValidateAndSellNftToTokenToNftPair ||
   log === TradeInstruction.CreateBondWithSingleCollateral;
 
 const isInstructionLog = (log: string) => log.startsWith('Program log: Instruction:');
@@ -203,8 +198,6 @@ export interface TradeActivity {
 enum TradeInstruction {
   BuyNftFromPair = 'Program log: Instruction: BuyNftFromPair',
   SellNftToTokenToNftPair = 'Program log: Instruction: SellNftToTokenToNftPair',
-  SellNftToLiquidityPair = 'Program log: Instruction: SellNftToLiquidityPair',
-  ValidateAndSellNftToTokenToNftPair = 'Program log: Instruction: ValidateAndSellNftToTokenToNftPair',
   CreateBondWithSingleCollateral = 'Program log: Instruction: CreateBondWithSingleCollateral',
 }
 
@@ -329,114 +322,6 @@ const TRADE_TRANSACTION_PARSERS = {
       nftMint: nftMint ? nftMint.toBase58() : '',
       solAmount: solAmount,
       amountOfTokens,
-      userMaker: userMaker ? userMaker.toBase58() : '',
-      userTaker: userTaker ? userTaker.toBase58() : '',
-    };
-  },
-  [TradeInstruction.SellNftToLiquidityPair]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-    connection: web3.Connection;
-  }): Promise<TradeActivity> => {
-    // try {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const orderType = OrderType.Sell;
-    const pair = programInstruction.accounts[1];
-    const userTaker = programInstruction.accounts[3];
-    // const userMaker = programInstruction.accounts[7];
-    const nftMint = programInstruction.accounts[4];
-
-    const preMintTokenBalance: any = transaction.meta?.preTokenBalances?.find(
-      (preBalance) => preBalance.mint === nftMint.toBase58(),
-    );
-    if (!preMintTokenBalance) {
-      return {
-        timestamp: blockTime,
-        signature: signature,
-        pair: pair ? pair.toBase58() : '',
-        orderType: orderType,
-        pairType: null,
-        nftMint: nftMint ? nftMint.toBase58() : '',
-        solAmount: solAmount,
-        amountOfTokens: 0,
-        userMaker: null,
-        userTaker: userTaker ? userTaker.toBase58() : '',
-      };
-    }
-
-    const postMintTokenBalance: any = transaction.meta?.postTokenBalances?.find(
-      (preBalance) => preBalance.mint === nftMint.toBase58(),
-    );
-
-    const amountOfTokens = Math.abs(
-      preMintTokenBalance.uiTokenAmount.uiAmount - postMintTokenBalance?.uiTokenAmount.uiAmountString,
-    );
-
-    return {
-      timestamp: blockTime,
-      signature: signature,
-      pair: pair ? pair.toBase58() : '',
-      orderType: orderType,
-      pairType: PairType.LiquidityProvision,
-      nftMint: nftMint ? nftMint.toBase58() : '',
-      // bid_cap:
-      solAmount: solAmount,
-      amountOfTokens: amountOfTokens,
-      userMaker: null,
-      userTaker: userTaker ? userTaker.toBase58() : '',
-    };
-    // } catch(err) }
-  },
-  [TradeInstruction.ValidateAndSellNftToTokenToNftPair]: async ({
-    innerInstruction,
-    programInstruction,
-    signature,
-    blockTime,
-    transaction,
-    connection,
-  }: {
-    innerInstruction: web3.ParsedInnerInstruction;
-    programInstruction: web3.PartiallyDecodedInstruction;
-    signature: string;
-    blockTime: number;
-    transaction: web3.ParsedTransactionWithMeta;
-
-    connection: web3.Connection;
-  }): Promise<TradeActivity> => {
-    const solAmount = getTransferAmountFromInnerInstructions(innerInstruction);
-    const orderType = OrderType.Sell;
-    const pair = programInstruction.accounts[5];
-    const userTaker = programInstruction.accounts[10];
-    const userMaker = programInstruction.accounts[13];
-    const nftMint = programInstruction.accounts[4];
-
-    const amountOfTokens =
-      (innerInstruction.instructions.find((ix) => (ix as any).parsed.type == 'burn') as any)?.parsed?.info?.amount ||
-      +(
-        innerInstruction.instructions.find(
-          (ix) => (ix as any).parsed.type == 'transfer' && ix.programId.toBase58() === TOKEN_PROGRAM_ID.toBase58(),
-        ) as any
-      ).parsed.info.amount;
-
-    return {
-      timestamp: blockTime,
-      signature: signature,
-      pair: pair ? pair.toBase58() : '',
-      orderType: orderType,
-      pairType: PairType.TokenForNFT,
-      nftMint: nftMint ? nftMint.toBase58() : '',
-      solAmount: +solAmount,
-      amountOfTokens: +amountOfTokens,
       userMaker: userMaker ? userMaker.toBase58() : '',
       userTaker: userTaker ? userTaker.toBase58() : '',
     };

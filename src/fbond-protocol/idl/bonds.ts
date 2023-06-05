@@ -1650,32 +1650,6 @@ export type Bonds = {
           }
         }
       ]
-    },
-    {
-      "name": "patchBondOffer",
-      "accounts": [
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -5067,32 +5041,6 @@ export const IDL: Bonds = {
           }
         }
       ]
-    },
-    {
-      "name": "patchBondOffer",
-      "accounts": [
-        {
-          "name": "bondOfferV2",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
